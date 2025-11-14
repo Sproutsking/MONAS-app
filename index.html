@@ -1,0 +1,3587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>MonApe - Enhanced Platform</title>
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --secondary: #A78BFA;
+            --accent: #EC4899;
+            --accent-red: #EF4444;
+            --success: #22C55E;
+            --bg-primary: #000000;
+            --bg-secondary: #1A1A2E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --border: #2D3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(139, 92, 246, 0.03) 40px, rgba(139, 92, 246, 0.03) 80px),
+                repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(236, 72, 153, 0.03) 40px, rgba(236, 72, 153, 0.03) 80px),
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--bg-secondary);
+            padding: 20px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+       
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+       
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+       
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            font-size: 14px;
+        }
+       
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+       
+        .nav-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateX(4px);
+        }
+       
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+       
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+       
+        .nav-icon {
+            margin-right: 16px;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+       
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+            color: var(--primary);
+        }
+       
+        .social-buttons {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+       
+        .social-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+       
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+       
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 22px;
+        }
+       
+        .social-btn:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+       
+        .social-btn.twitter { color: #1DA1F2; }
+        .social-btn.discord { color: #5865F2; }
+        .social-btn.tiktok { color: #FF0050; }
+        .social-btn.telegram { color: #0088CC; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 40px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Sub Navigation */
+        .sub-nav-container {
+            padding: 20px 40px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sub-nav {
+            display: none;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .sub-nav.active {
+            display: flex;
+        }
+
+        .sub-nav-item {
+            padding: 10px 24px;
+            border-radius: 24px;
+            background: transparent;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sub-nav-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary);
+        }
+
+        .sub-nav-item.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 20px;
+        }
+
+        .section-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section-content.active {
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-secondary);
+            padding: 28px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .card-title {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Create Section Cards */
+        .create-type-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .create-type-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .create-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+            border-color: var(--primary);
+        }
+
+        .create-type-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .create-type-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .create-type-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* NFT Creator */
+        .nft-creator {
+            display: none;
+        }
+
+        .nft-creator.active {
+            display: block;
+        }
+
+        .layer-builder {
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .layer-preview {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1;
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .layer-item {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .layer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .metadata-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        /* Collection Carousel */
+        .collection-carousel {
+            position: relative;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .collection-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 4px;
+        }
+
+        .collection-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .collection-card {
+            min-width: 280px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25);
+        }
+
+        .collection-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .collection-name {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .collection-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 16px;
+        }
+
+        .collection-stat {
+            text-align: center;
+        }
+
+        .collection-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .collection-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(139, 92, 246, 0.8);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-nav:hover {
+            background: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.left {
+            left: 10px;
+        }
+
+        .carousel-nav.right {
+            right: 10px;
+        }
+
+        /* NFT Grid */
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .nft-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .nft-image {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            position: relative;
+        }
+
+        .rarity-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+        }
+
+        .rarity-common { background: rgba(156, 163, 175, 0.9); }
+        .rarity-rare { background: rgba(59, 130, 246, 0.9); }
+        .rarity-epic { background: rgba(139, 92, 246, 0.9); }
+        .rarity-legendary { background: rgba(245, 158, 11, 0.9); }
+        .rarity-mythic { background: rgba(239, 68, 68, 0.9); }
+
+        .nft-info {
+            padding: 20px;
+        }
+
+        .nft-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .nft-price {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .nft-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #7C3AED;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            padding: 32px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            color: var(--accent-red);
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* Wallet Hero */
+        .wallet-hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            text-align: center;
+            color: white;
+        }
+
+        .wallet-balance {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .wallet-address-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        /* Profile */
+        .profile-hero {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .profile-avatar {
+            font-size: 80px;
+            position: relative;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .profile-username {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .profile-stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+        }
+
+        .profile-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .profile-stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Asset Dashboard */
+        .asset-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .asset-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .asset-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+        }
+
+        .asset-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .asset-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .asset-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Settings */
+        .settings-section {
+            margin-bottom: 32px;
+        }
+
+        .settings-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        /* Transfer Wallets */
+        .transfer-wallets {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .transfer-wallet {
+            min-width: 200px;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .transfer-wallet:hover,
+        .transfer-wallet.active {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .transfer-wallet-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .transfer-wallet-balance {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary);
+        }
+
+        .bottom-nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .bottom-nav-label {
+            font-size: 11px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            padding: 20px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            z-index: 3000;
+            animation: slideInRight 0.4s ease;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--accent-red);
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .file-upload-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Asset Tab Content */
+        .asset-tab-content {
+            display: none;
+        }
+
+        .asset-tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Collection View */
+        .collection-view {
+            display: none;
+        }
+
+        .collection-view.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .bottom-nav {
+                display: flex;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 20px;
+                padding-bottom: 80px;
+            }
+
+            .nft-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 16px;
+            }
+
+            .asset-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .profile-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .transfer-wallets {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .transfer-wallet {
+                min-width: 180px;
+            }
+
+            .wallet-hero {
+                padding: 24px 20px;
+            }
+
+            .wallet-balance {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-input, .form-select {
+                padding: 12px;
+            }
+
+            .create-type-cards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .layer-preview {
+                max-width: 100%;
+                height: 300px;
+            }
+
+            .metadata-form {
+                grid-template-columns: 1fr;
+            }
+
+            .file-upload-area {
+                padding: 40px 20px;
+            }
+
+            .import-options {
+                grid-template-columns: 1fr;
+            }
+
+            .collection-card {
+                min-width: 240px;
+            }
+
+            .search-panel {
+                padding: 16px;
+            }
+
+            .search-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 24px;
+            }
+
+            .sub-nav-container {
+                padding: 16px 20px;
+            }
+
+            .sub-nav {
+                gap: 8px;
+            }
+
+            .sub-nav-item {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        /* Overlay Panel */
+        .overlay-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+        }
+
+        .overlay-panel.active {
+            right: 0;
+        }
+
+        .overlay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .overlay-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Search Panel */
+        .search-panel {
+            padding: 20px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .clear-filters-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-filters-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        /* Import Section */
+        .import-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .import-card {
+            padding: 32px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .import-card:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .import-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .import-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .import-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">MonApe</div>
+            <nav>
+                <div class="nav-item active" data-section="create">
+                    <i class='bx bxs-brush nav-icon'></i>
+                    <span>Create</span>
+                </div>
+                <div class="nav-item" data-section="enhance">
+                    <i class='bx bxs-up-arrow-circle nav-icon'></i>
+                    <span>Enhance</span>
+                </div>
+                <div class="nav-item" data-section="merch">
+                    <i class='bx bxs-shopping-bag nav-icon'></i>
+                    <span>Merch</span>
+                </div>
+                <div class="nav-item" data-section="wallet">
+                    <i class='bx bxs-wallet nav-icon'></i>
+                    <span>Wallet</span>
+                </div>
+                <div class="nav-item" data-section="account">
+                    <i class='bx bxs-user-detail nav-icon'></i>
+                    <span>Account</span>
+                </div>
+            </nav>
+           
+            <div class="social-buttons">
+                <div class="social-label">Connect With Us</div>
+                <div class="social-grid">
+                    <div class="social-btn twitter" onclick="openSocial('twitter')">
+                        <i class='bx bxl-twitter'></i>
+                    </div>
+                    <div class="social-btn discord" onclick="openSocial('discord')">
+                        <i class='bx bxl-discord-alt'></i>
+                    </div>
+                    <div class="social-btn tiktok" onclick="openSocial('tiktok')">
+                        <i class='bx bxl-tiktok'></i>
+                    </div>
+                    <div class="social-btn telegram" onclick="openSocial('telegram')">
+                        <i class='bx bxl-telegram'></i>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title" id="headerTitle">Create</h1>
+                <div class="header-actions">
+                    <button class="icon-btn" id="notificationBtn">
+                        <i class='bx bx-bell'></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="icon-btn" id="supportBtn">
+                        <i class='bx bx-headphone'></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Sub Navigation -->
+            <div class="sub-nav-container">
+                <!-- Create Sub-Nav -->
+                <div class="sub-nav active" data-section="create">
+                    <div class="sub-nav-item active" data-subsection="market">Market</div>
+                    <div class="sub-nav-item" data-subsection="create-main">Create</div>
+                    <div class="sub-nav-item" data-subsection="list">List</div>
+                </div>
+
+                <!-- Enhance Sub-Nav -->
+                <div class="sub-nav" data-section="enhance">
+                    <div class="sub-nav-item active" data-subsection="accessories">Accessories</div>
+                    <div class="sub-nav-item" data-subsection="upgrade">Upgrade</div>
+                    <div class="sub-nav-item" data-subsection="modified">Modified</div>
+                </div>
+
+                <!-- Merch Sub-Nav -->
+                <div class="sub-nav" data-section="merch">
+                    <div class="sub-nav-item active" data-subsection="items">Items</div>
+                    <div class="sub-nav-item" data-subsection="cart">Cart</div>
+                    <div class="sub-nav-item" data-subsection="wishlist">Wishlist</div>
+                    <div class="sub-nav-item" data-subsection="orders">Orders</div>
+                </div>
+
+                <!-- Wallet Sub-Nav -->
+                <div class="sub-nav" data-section="wallet">
+                    <div class="sub-nav-item active" data-subsection="send">Send</div>
+                    <div class="sub-nav-item" data-subsection="receive">Receive</div>
+                    <div class="sub-nav-item" data-subsection="swap">Swap</div>
+                    <div class="sub-nav-item" data-subsection="history">History</div>
+                    <div class="sub-nav-item" data-subsection="transfer">Transfer</div>
+                </div>
+
+                <!-- Account Sub-Nav -->
+                <div class="sub-nav" data-section="account">
+                    <div class="sub-nav-item active" data-subsection="profile">Profile</div>
+                    <div class="sub-nav-item" data-subsection="settings">Settings</div>
+                    <div class="sub-nav-item" data-subsection="privacy">Privacy</div>
+                    <div class="sub-nav-item" data-subsection="assets">Assets</div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Market Section -->
+                <div class="section-content active" data-section="create" data-subsection="market">
+                    <!-- Search Panel -->
+                    <div class="search-panel">
+                        <input type="text" class="search-input" id="marketSearch" placeholder="Search NFTs, collections...">
+                        <div class="search-filters">
+                            <select class="filter-select" id="rarityFilter">
+                                <option value="">All Rarities</option>
+                                <option value="common">Common</option>
+                                <option value="rare">Rare</option>
+                                <option value="epic">Epic</option>
+                                <option value="legendary">Legendary</option>
+                                <option value="mythic">Mythic</option>
+                            </select>
+                            <select class="filter-select" id="priceFilter">
+                                <option value="">All Prices</option>
+                                <option value="0-5">Under 5 MON</option>
+                                <option value="5-10">5-10 MON</option>
+                                <option value="10+">Over 10 MON</option>
+                            </select>
+                            <select class="filter-select" id="typeFilter">
+                                <option value="">All Types</option>
+                                <option value="regular">Regular</option>
+                                <option value="modified">Modified</option>
+                            </select>
+                            <button class="clear-filters-btn" id="clearFilters">Clear</button>
+                        </div>
+                    </div>
+
+                    <!-- Collections Carousel -->
+                    <div class="card">
+                        <h2 class="card-title">Collections</h2>
+                        <div class="collection-carousel">
+                            <button class="carousel-nav left" id="carouselLeft">‹</button>
+                            <div class="collection-scroll" id="collectionScroll"></div>
+                            <button class="carousel-nav right" id="carouselRight">›</button>
+                        </div>
+                    </div>
+
+                    <!-- NFT Grid -->
+                    <div class="card">
+                        <h2 class="card-title">NFTs</h2>
+                        <div class="nft-grid" id="nftMarket"></div>
+                    </div>
+                </div>
+
+                <!-- Collection View (Sub-section of Market) -->
+                <div class="collection-view" id="collectionView">
+                    <button class="back-btn" id="backToMarket">
+                        <i class='bx bx-arrow-back'></i>
+                        Back to Market
+                    </button>
+                    <div class="card">
+                        <h2 class="card-title" id="collectionViewTitle">Collection Name</h2>
+                        <div class="nft-grid" id="collectionNFTs"></div>
+                    </div>
+                </div>
+
+                <!-- Create Main Section -->
+                <div class="section-content" data-section="create" data-subsection="create-main">
+                    <div class="create-type-cards" id="createTypeCards">
+                        <div class="create-type-card" data-type="nft">
+                            <div class="create-type-icon">🎨</div>
+                            <div class="create-type-title">Create NFT</div>
+                            <div class="create-type-desc">Design your unique NFT with layers and metadata</div>
+                        </div>
+                        <div class="create-type-card" data-type="collection">
+                            <div class="create-type-icon">📚</div>
+                            <div class="create-type-title">Create Collection</div>
+                            <div class="create-type-desc">Launch your own NFT collection</div>
+                        </div>
+                    </div>
+
+                    <!-- NFT Creator -->
+                    <div class="nft-creator" id="nftCreator">
+                        <button class="back-btn" id="backToCreateMain">
+                            <i class='bx bx-arrow-back'></i>
+                            Back
+                        </button>
+                        <div class="card">
+                            <h2 class="card-title">NFT Layer Builder</h2>
+                            <div class="layer-builder">
+                                <div class="layer-preview" id="layerPreview">
+                                    <span style="color: var(--text-secondary);">Layer preview</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Add Layer</label>
+                                    <input type="file" class="form-input" id="layerUpload" accept="image/*">
+                                </div>
+                                <div class="layer-list" id="layerList"></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">NFT Metadata</h2>
+                            <div class="metadata-form">
+                                <div class="form-group">
+                                    <label class="form-label">Name *</label>
+                                    <input type="text" class="form-input" id="nftName" placeholder="My NFT">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-input" id="nftDescription" placeholder="Description">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Rarity</label>
+                                    <select class="form-select" id="nftRarity">
+                                        <option value="common">Common</option>
+                                        <option value="rare">Rare</option>
+                                        <option value="epic">Epic</option>
+                                        <option value="legendary">Legendary</option>
+                                        <option value="mythic">Mythic</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Collection (Optional)</label>
+                                    <select class="form-select" id="nftCollection">
+                                        <option value="">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="createNFT()">Create NFT</button>
+                        </div>
+                    </div>
+
+                    <!-- Collection Creator -->
+                    <div class="nft-creator" id="collectionCreator">
+                        <button class="back-btn" id="backToCreateMainCol">
+                            <i class='bx bx-arrow-back'></i>
+                            Back
+                        </button>
+                        <div class="card">
+                            <h2 class="card-title">Collection Details</h2>
+                            <div class="file-upload-area" id="collectionBannerUpload">
+                                <div class="file-upload-icon">🖼️</div>
+                                <p>Upload Collection Banner</p>
+                                <p class="file-upload-text">Recommended: 1400x400px</p>
+                            </div>
+                            <div class="metadata-form">
+                                <div class="form-group">
+                                    <label class="form-label">Collection Name *</label>
+                                    <input type="text" class="form-input" id="collectionName" placeholder="My Collection">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Symbol *</label>
+                                    <input type="text" class="form-input" id="collectionSymbol" placeholder="MYCOL">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-input" id="collectionDescription" placeholder="Collection description">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Total Supply</label>
+                                    <input type="number" class="form-input" id="collectionSupply" placeholder="10000">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="createCollection()">Create Collection</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Section -->
+                <div class="section-content" data-section="create" data-subsection="list">
+                    <div class="card">
+                        <h2 class="card-title">List Item for Sale</h2>
+                        <div class="import-options" style="margin-bottom: 32px;">
+                            <div class="import-card" onclick="openAssetSelector('list')">
+                                <div class="import-icon">🖼️</div>
+                                <div class="import-title">From Assets</div>
+                                <div class="import-desc">Select from your NFTs or Collections</div>
+                            </div>
+                            <div class="import-card" onclick="openImportModal()">
+                                <div class="import-icon">📥</div>
+                                <div class="import-title">Import NFT</div>
+                                <div class="import-desc">Import from external wallet</div>
+                            </div>
+                            <div class="import-card" onclick="openCollectionUpload()">
+                                <div class="import-icon">📁</div>
+                                <div class="import-title">Upload Collection</div>
+                                <div class="import-desc">Upload complete NFT collection file</div>
+                            </div>
+                        </div>
+
+                        <div id="listingForm" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Selected Item</label>
+                                <input type="text" class="form-input" id="listItemName" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Price (MON)</label>
+                                <input type="number" class="form-input" id="listPrice" placeholder="0.00">
+                            </div>
+                            <button class="btn btn-primary" onclick="listItem()">List for Sale</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessories Section -->
+                <div class="section-content" data-section="enhance" data-subsection="accessories">
+                    <div class="nft-grid" id="accessoriesShop"></div>
+                </div>
+
+                <!-- Upgrade Section -->
+                <div class="section-content" data-section="enhance" data-subsection="upgrade">
+                    <div class="card">
+                        <h2 class="card-title">Upgrade NFT</h2>
+                        <div class="import-options" style="margin-bottom: 32px;">
+                            <div class="import-card" onclick="openAssetSelector('nft')">
+                                <div class="import-icon">🖼️</div>
+                                <div class="import-title">Select NFT</div>
+                                <div class="import-desc">Choose NFT to upgrade</div>
+                            </div>
+                            <div class="import-card" onclick="openAssetSelector('accessory')">
+                                <div class="import-icon">⭐</div>
+                                <div class="import-title">Select Accessory</div>
+                                <div class="import-desc">Choose accessory to apply</div>
+                            </div>
+                        </div>
+                        <div id="upgradeForm" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">NFT</label>
+                                <input type="text" class="form-input" id="upgradeNFT" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Accessory</label>
+                                <input type="text" class="form-input" id="upgradeAccessory" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Upgrade Cost</label>
+                                <input type="text" class="form-input" value="1.5 MON" readonly>
+                            </div>
+                            <button class="btn btn-primary" onclick="upgradeNFT()">Upgrade NFT</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modified NFTs Section -->
+                <div class="section-content" data-section="enhance" data-subsection="modified">
+                    <div class="card">
+                        <h2 class="card-title">Modified NFTs</h2>
+                        <div class="nft-grid" id="modifiedNFTs"></div>
+                    </div>
+                </div>
+
+                <!-- Merch Items Section -->
+                <div class="section-content" data-section="merch" data-subsection="items">
+                    <div class="nft-grid" id="merchItems"></div>
+                </div>
+
+                <!-- Cart Section -->
+                <div class="section-content" data-section="merch" data-subsection="cart">
+                    <div class="card">
+                        <h2 class="card-title">Shopping Cart</h2>
+                        <div id="cartItems"></div>
+                        <div style="text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;" id="cartTotal">Total: $0.00</div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="proceedToCheckout()">Checkout</button>
+                    </div>
+                </div>
+
+                <!-- Wishlist Section -->
+                <div class="section-content" data-section="merch" data-subsection="wishlist">
+                    <div class="card">
+                        <h2 class="card-title">Wishlist</h2>
+                        <div class="nft-grid" id="wishlistItems"></div>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div class="section-content" data-section="merch" data-subsection="orders">
+                    <div class="card" id="ordersList">
+                        <h2 class="card-title">My Orders</h2>
+                        <div id="ordersContainer"></div>
+                    </div>
+                    
+                    <!-- Order Details View -->
+                    <div class="card" id="orderDetailsView" style="display: none;">
+                        <button class="back-btn" onclick="closeOrderDetails()">
+                            <i class='bx bx-arrow-back'></i>
+                            Back to Orders
+                        </button>
+                        <div id="orderDetailsContent"></div>
+                    </div>
+                </div>
+
+                <!-- Wallet Send Section -->
+                <div class="section-content" data-section="wallet" data-subsection="send">
+                    <div class="wallet-hero">
+                        <div class="wallet-balance">1,250.50 MON</div>
+                        <div class="wallet-address-badge">0x742d...f0bEb</div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Send Tokens</h2>
+                        <div class="form-group">
+                            <label class="form-label">Token</label>
+                            <select class="form-select">
+                                <option>MON</option>
+                                <option>MONAPE</option>
+                                <option>USDT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Recipient Address</label>
+                            <input type="text" class="form-input" placeholder="0x...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" placeholder="0.00">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="sendTransaction()">Send</button>
+                    </div>
+                </div>
+
+                <!-- Wallet Receive Section -->
+                <div class="section-content" data-section="wallet" data-subsection="receive">
+                    <div class="wallet-hero">
+                        <div class="wallet-balance">1,250.50 MON</div>
+                        <div class="wallet-address-badge">0x742d...f0bEb</div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Receive Tokens</h2>
+                        <div style="text-align: center; padding: 40px;">
+                            <div style="font-size: 100px; margin-bottom: 20px;">📥</div>
+                            <h3 style="margin-bottom: 20px;">Your Wallet Address</h3>
+                            <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 18px; word-break: break-all;">
+                                0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+                            </div>
+                            <button class="btn btn-primary" onclick="copyToClipboard('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb')">Copy Address</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wallet Swap Section -->
+                <div class="section-content" data-section="wallet" data-subsection="swap">
+                    <div class="wallet-hero">
+                        <div class="wallet-balance">1,250.50 MON</div>
+                        <div class="wallet-address-badge">0x742d...f0bEb</div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Swap Tokens</h2>
+                        <div class="form-group">
+                            <label class="form-label">From</label>
+                            <select class="form-select">
+                                <option>MON</option>
+                                <option>MONAPE</option>
+                                <option>USDT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" placeholder="0.00">
+                        </div>
+                        <div style="text-align: center; font-size: 32px; margin: 20px 0;">🔄</div>
+                        <div class="form-group">
+                            <label class="form-label">To</label>
+                            <select class="form-select">
+                                <option>USDT</option>
+                                <option>MON</option>
+                                <option>MONAPE</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="swapTokens()">Swap</button>
+                    </div>
+                </div>
+
+                <!-- Wallet History Section -->
+                <div class="section-content" data-section="wallet" data-subsection="history">
+                    <div class="wallet-hero">
+                        <div class="wallet-balance">1,250.50 MON</div>
+                        <div class="wallet-address-badge">0x742d...f0bEb</div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Transaction History</h2>
+                        <div id="transactionHistory"></div>
+                    </div>
+                </div>
+
+                <!-- Wallet Transfer Section -->
+                <div class="section-content" data-section="wallet" data-subsection="transfer">
+                    <div class="wallet-hero">
+                        <div class="wallet-balance">1,250.50 MON</div>
+                        <div class="wallet-address-badge">0x742d...f0bEb</div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Import from Connected Wallets</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 24px;">Transfer funds from external wallets to your MonApe wallet</p>
+                        
+                        <div class="transfer-wallets">
+                            <div class="transfer-wallet active">
+                                <div class="transfer-wallet-name">MetaMask</div>
+                                <div class="transfer-wallet-balance">1,500 MON</div>
+                            </div>
+                            <div class="transfer-wallet">
+                                <div class="transfer-wallet-name">Phantom</div>
+                                <div class="transfer-wallet-balance">800 SOL</div>
+                            </div>
+                            <div class="transfer-wallet">
+                                <div class="transfer-wallet-name">Coinbase</div>
+                                <div class="transfer-wallet-balance">2,000 USDT</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Asset</label>
+                            <select class="form-select">
+                                <option>MON</option>
+                                <option>ETH</option>
+                                <option>USDT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" placeholder="0.00">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="importFunds()">Import Funds</button>
+                    </div>
+                </div>
+
+                <!-- Account Profile Section -->
+                <div class="section-content" data-section="account" data-subsection="profile">
+                    <div class="card">
+                        <div class="profile-hero">
+                            <div class="profile-avatar">🦧</div>
+                            <div class="profile-info">
+                                <div class="profile-name">MonApe User</div>
+                                <div class="profile-username">@user123</div>
+                            </div>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-value">12</div>
+                                <div class="profile-stat-label">NFTs</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value">3</div>
+                                <div class="profile-stat-label">Collections</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value">8</div>
+                                <div class="profile-stat-label">Modified</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value">$2,847</div>
+                                <div class="profile-stat-label">Portfolio</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Display Name</label>
+                            <input type="text" class="form-input" value="MonApe User">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-input" value="@user123">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" value="user@monape.io">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <input type="text" class="form-input" value="NFT enthusiast and creator">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- Account Settings Section -->
+                <div class="section-content" data-section="account" data-subsection="settings">
+                    <div class="card">
+                        <h2 class="card-title">Settings</h2>
+                        
+                        <div class="settings-section">
+                            <div class="settings-title">Security</div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Extra security layer</p>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleSetting(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Biometric Login</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Use fingerprint/face ID</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSetting(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Change Password</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Update your password</p>
+                                </div>
+                                <button class="btn btn-secondary btn-small">Change</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-title">Privacy</div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Profile Visibility</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Who can see your NFTs</p>
+                                </div>
+                                <select class="form-select" style="width: 120px;">
+                                    <option>Public</option>
+                                    <option>Private</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Data Export</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Download your data</p>
+                                </div>
+                                <button class="btn btn-secondary btn-small">Export</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-title">Notifications</div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Email Alerts</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Transaction notifications</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="toggleSetting(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Push Notifications</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">App push alerts</p>
+                                </div>
+                                <div class="toggle-switch" onclick="toggleSetting(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-title">Connected Wallets</div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>MetaMask</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">0x742d...f0bEb</p>
+                                </div>
+                                <button class="btn btn-secondary btn-small">Disconnect</button>
+                            </div>
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Connect New Wallet</h4>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">Add external wallet</p>
+                                </div>
+                                <button class="btn btn-primary btn-small">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Section -->
+                <div class="section-content" data-section="account" data-subsection="privacy">
+                    <div class="card">
+                        <h2 class="card-title">Privacy & Policy</h2>
+                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
+                            <h3 style="margin-bottom: 12px;">Data Collection</h3>
+                            <p style="color: var(--text-secondary); line-height: 1.6;">MonApe collects minimal data necessary to provide our services. We collect wallet addresses, transaction history, and profile information you choose to provide. Your private keys are never stored on our servers.</p>
+                        </div>
+                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
+                            <h3 style="margin-bottom: 12px;">NFT Minting & Trading</h3>
+                            <p style="color: var(--text-secondary); line-height: 1.6;">All NFT transactions are recorded on the blockchain and are publicly visible. When you mint or trade NFTs, your wallet address will be associated with these transactions.</p>
+                        </div>
+                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
+                            <h3 style="margin-bottom: 12px;">Wallet Security</h3>
+                            <p style="color: var(--text-secondary); line-height: 1.6;">You are solely responsible for maintaining the security of your wallet credentials. MonApe cannot recover lost passwords or private keys. Always enable two-factor authentication.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assets Section -->
+                <div class="section-content" data-section="account" data-subsection="assets">
+                    <div class="sub-nav" style="display: flex; margin-bottom: 24px;">
+                        <div class="sub-nav-item active" data-asset-tab="overview">Overview</div>
+                        <div class="sub-nav-item" data-asset-tab="nfts">NFT Gallery</div>
+                        <div class="sub-nav-item" data-asset-tab="collections">Collections</div>
+                        <div class="sub-nav-item" data-asset-tab="accessories">Accessories</div>
+                    </div>
+
+                    <!-- Overview Tab -->
+                    <div class="asset-tab-content active" data-asset-tab="overview">
+                        <div class="asset-dashboard">
+                            <div class="asset-card">
+                                <div class="asset-icon">💰</div>
+                                <div class="asset-value">$2,847.50</div>
+                                <div class="asset-label">Total Portfolio</div>
+                            </div>
+                            <div class="asset-card">
+                                <div class="asset-icon">🖼️</div>
+                                <div class="asset-value">12</div>
+                                <div class="asset-label">NFTs Owned</div>
+                            </div>
+                            <div class="asset-card">
+                                <div class="asset-icon">📊</div>
+                                <div class="asset-value">3</div>
+                                <div class="asset-label">Collections</div>
+                            </div>
+                            <div class="asset-card">
+                                <div class="asset-icon">⭐</div>
+                                <div class="asset-value">8</div>
+                                <div class="asset-label">Accessories</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">Token Balances</h2>
+                            <div id="tokenBalances"></div>
+                        </div>
+                    </div>
+
+                    <!-- NFT Gallery Tab -->
+                    <div class="asset-tab-content" data-asset-tab="nfts">
+                        <div class="card">
+                            <h2 class="card-title">My NFTs</h2>
+                            <div class="nft-grid" id="myNFTGallery"></div>
+                        </div>
+                    </div>
+
+                    <!-- Collections Tab -->
+                    <div class="asset-tab-content" data-asset-tab="collections">
+                        <div class="card">
+                            <h2 class="card-title">My Collections</h2>
+                            <div id="myCollections"></div>
+                        </div>
+                    </div>
+
+                    <!-- Accessories Tab -->
+                    <div class="asset-tab-content" data-asset-tab="accessories">
+                        <div class="card">
+                            <h2 class="card-title">My Accessories</h2>
+                            <div class="nft-grid" id="myAccessories"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-item active" data-section="create">
+                <i class='bx bxs-brush bottom-nav-icon'></i>
+                <div class="bottom-nav-label">Create</div>
+            </div>
+            <div class="bottom-nav-item" data-section="enhance">
+                <i class='bx bxs-up-arrow-circle bottom-nav-icon'></i>
+                <div class="bottom-nav-label">Enhance</div>
+            </div>
+            <div class="bottom-nav-item" data-section="merch">
+                <i class='bx bxs-shopping-bag bottom-nav-icon'></i>
+                <div class="bottom-nav-label">Merch</div>
+            </div>
+            <div class="bottom-nav-item" data-section="wallet">
+                <i class='bx bxs-wallet bottom-nav-icon'></i>
+                <div class="bottom-nav-label">Wallet</div>
+            </div>
+            <div class="bottom-nav-item" data-section="account">
+                <i class='bx bxs-user-detail bottom-nav-icon'></i>
+                <div class="bottom-nav-label">Account</div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="overlay-panel" id="notificationPanel">
+        <div class="overlay-header">
+            <h3>Notifications</h3>
+            <button class="close-btn" onclick="closePanel('notificationPanel')">✕</button>
+        </div>
+        <div class="overlay-content">
+            <div class="card">
+                <h4 style="margin-bottom: 8px;">🎉 NFT Sold</h4>
+                <p style="margin-bottom: 8px;">Cyber Ape #001 sold for 5.2 MON</p>
+                <small style="color: var(--text-secondary);">2 hours ago</small>
+            </div>
+            <div class="card">
+                <h4 style="margin-bottom: 8px;">💰 Payment Received</h4>
+                <p style="margin-bottom: 8px;">50 MON received</p>
+                <small style="color: var(--text-secondary);">5 hours ago</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Panel -->
+    <div class="overlay-panel" id="supportPanel">
+        <div class="overlay-header">
+            <h3>Support</h3>
+            <button class="close-btn" onclick="closePanel('supportPanel')">✕</button>
+        </div>
+        <div class="overlay-content">
+            <div class="card">
+                <h3 style="margin-bottom: 16px;">How can we help?</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Our support team is here 24/7</p>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;">Start Live Chat</button>
+                <button class="btn btn-secondary" style="width: 100%;">Email Support</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asset Selector Modal -->
+    <div class="modal-overlay" id="assetSelectorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="assetSelectorTitle">Select Asset</h3>
+                <button class="close-btn" onclick="closeModal('assetSelectorModal')">✕</button>
+            </div>
+            <div class="nft-grid" id="assetSelectorGrid"></div>
+        </div>
+    </div>
+
+    <!-- Import NFT Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Import NFT</h3>
+                <button class="close-btn" onclick="closeModal('importModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Wallet Address</label>
+                <input type="text" class="form-input" placeholder="0x...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contract Address</label>
+                <input type="text" class="form-input" placeholder="0x...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Token ID</label>
+                <input type="text" class="form-input" placeholder="1234">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="importNFT()">Import NFT</button>
+        </div>
+    </div>
+
+    <!-- Upload Collection Modal -->
+    <div class="modal-overlay" id="uploadCollectionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Collection</h3>
+                <button class="close-btn" onclick="closeModal('uploadCollectionModal')">✕</button>
+            </div>
+            <div class="file-upload-area" onclick="document.getElementById('collectionFileInput').click()">
+                <div class="file-upload-icon">📁</div>
+                <p>Click or drag collection file</p>
+                <p class="file-upload-text">Accepted formats: ZIP, JSON</p>
+                <input type="file" id="collectionFileInput" accept=".zip,.json" style="display: none;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="processCollectionFile()">Upload Collection</button>
+        </div>
+    </div>
+
+    <!-- Buy NFT Modal -->
+    <div class="modal-overlay" id="buyNFTModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Purchase NFT</h3>
+                <button class="close-btn" onclick="closeModal('buyNFTModal')">✕</button>
+            </div>
+            <div id="buyNFTContent"></div>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('buyNFTModal')">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="openPinModal()">Confirm Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NFT Details Modal -->
+    <div class="modal-overlay" id="nftDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">NFT Details</h3>
+                <button class="close-btn" onclick="closeModal('nftDetailModal')">✕</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 120px; margin-bottom: 20px;" id="detailIcon">🐵</div>
+            </div>
+            <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Name:</span>
+                    <span style="font-weight: 600;" id="detailName">Ape #001</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Collection:</span>
+                    <span style="font-weight: 600;" id="detailCollection">Apes</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Rarity:</span>
+                    <span id="detailRarityBadge"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Price:</span>
+                    <span style="font-weight: 600; color: var(--primary);" id="detailPrice">5.2 MON</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Owner:</span>
+                    <span style="font-weight: 600;" id="detailOwner">0x742d...f0bEb</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="buyFromDetails()">Buy Now</button>
+        </div>
+    </div>
+
+    <!-- Accessory Details Modal -->
+    <div class="modal-overlay" id="accessoryDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Accessory Details</h3>
+                <button class="close-btn" onclick="closeModal('accessoryDetailModal')">✕</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 120px; margin-bottom: 20px;" id="accDetailIcon">🕶️</div>
+            </div>
+            <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Name:</span>
+                    <span style="font-weight: 600;" id="accDetailName">Sunglasses</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--text-secondary);">Description:</span>
+                    <span style="font-weight: 600; text-align: right; max-width: 60%;" id="accDetailDesc">Classic aviator sunglasses</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Price:</span>
+                    <span style="font-weight: 600; color: var(--primary);" id="accDetailPrice">0.5 MON</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="buyAccessoryFromDetails()">Purchase</button>
+        </div>
+    </div>
+
+    <!-- Checkout Confirmation Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Checkout</h3>
+                <button class="close-btn" onclick="closeModal('checkoutModal')">✕</button>
+            </div>
+            <div id="checkoutContent"></div>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('checkoutModal')">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="confirmCheckout()">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div class="modal-overlay" id="pinModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Enter PIN</h3>
+                <button class="close-btn" onclick="closeModal('pinModal')">✕</button>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; margin: 24px 0;">
+                <input type="password" maxlength="1" style="width: 60px; height: 60px; text-align: center; font-size: 24px; font-weight: bold; background: rgba(139, 92, 246, 0.1); border: 2px solid var(--border); border-radius: 12px; color: var(--text-primary);" class="pin-input">
+                <input type="password" maxlength="1" style="width: 60px; height: 60px; text-align: center; font-size: 24px; font-weight: bold; background: rgba(139, 92, 246, 0.1); border: 2px solid var(--border); border-radius: 12px; color: var(--text-primary);" class="pin-input">
+                <input type="password" maxlength="1" style="width: 60px; height: 60px; text-align: center; font-size: 24px; font-weight: bold; background: rgba(139, 92, 246, 0.1); border: 2px solid var(--border); border-radius: 12px; color: var(--text-primary);" class="pin-input">
+                <input type="password" maxlength="1" style="width: 60px; height: 60px; text-align: center; font-size: 24px; font-weight: bold; background: rgba(139, 92, 246, 0.1); border: 2px solid var(--border); border-radius: 12px; color: var(--text-primary);" class="pin-input">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="confirmPin()">Verify PIN</button>
+        </div>
+    </div>
+
+    <!-- 2FA Modal -->
+    <div class="modal-overlay" id="twofaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Two-Factor Authentication</h3>
+                <button class="close-btn" onclick="closeModal('twofaModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Enter 6-digit code</label>
+                <input type="text" class="form-input" placeholder="000000" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 8px;" id="twoFAInput">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="confirmTwoFA()">Verify & Complete</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Transaction Complete</h3>
+                <button class="close-btn" onclick="closeModal('confirmationModal')">✕</button>
+            </div>
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 80px; margin-bottom: 20px; animation: scaleIn 0.5s ease;">✅</div>
+                <h2 style="margin-bottom: 12px;">Success!</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">Your transaction has been confirmed on the blockchain.</p>
+                <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('confirmationModal')">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .transaction-summary {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 24px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .summary-label {
+            color: var(--text-secondary);
+        }
+        .summary-value {
+            font-weight: 600;
+        }
+    </style>
+
+    <script>
+        // State Management
+        const state = {
+            currentSection: 'create',
+            currentSubsection: 'market',
+            currentAssetTab: 'overview',
+            layers: [],
+            myNFTs: [
+                { id: 1, name: 'Cyber Ape #001', icon: '🐵', price: 5.2, rarity: 'epic', collection: 'Apes' },
+                { id: 2, name: 'Quantum Mask #042', icon: '🎭', price: 7.8, rarity: 'legendary', collection: 'Masks' },
+                { id: 3, name: 'Golden Crown #007', icon: '👑', price: 12.0, rarity: 'mythic', collection: 'Crowns' }
+            ],
+            marketNFTs: [
+                { id: 101, name: 'Space Gorilla', icon: '🦍', price: 8.5, rarity: 'epic', type: 'regular', collection: 'Apes' },
+                { id: 102, name: 'Neon Ape', icon: '🐒', price: 6.2, rarity: 'rare', type: 'regular', collection: 'Apes' },
+                { id: 103, name: 'Diamond Mask', icon: '💎', price: 15.0, rarity: 'legendary', type: 'regular', collection: 'Masks' },
+                { id: 104, name: 'Fire Ape', icon: '🔥', price: 9.3, rarity: 'epic', type: 'regular', collection: 'Apes' }
+            ],
+            modifiedNFTs: [],
+            collections: [
+                { id: 1, name: 'Apes', icon: '🐵', nftCount: 3, volume: 24.5 },
+                { id: 2, name: 'Masks', icon: '🎭', nftCount: 2, volume: 22.8 },
+                { id: 3, name: 'Crowns', icon: '👑', nftCount: 1, volume: 12.0 }
+            ],
+            accessories: [
+                { id: 1, name: 'Sunglasses', icon: '🕶️', price: 0.5, description: 'Classic aviator sunglasses' },
+                { id: 2, name: 'Top Hat', icon: '🎩', price: 0.8, description: 'Elegant top hat for distinguished apes' },
+                { id: 3, name: 'Crown', icon: '👑', price: 1.2, description: 'Royal golden crown' },
+                { id: 4, name: 'Sword', icon: '⚔️', price: 1.5, description: 'Legendary warrior sword' },
+                { id: 5, name: 'Shield', icon: '🛡️', price: 1.3, description: 'Protective battle shield' },
+                { id: 6, name: 'Ring', icon: '💍', price: 0.7, description: 'Diamond engagement ring' },
+                { id: 7, name: 'Necklace', icon: '📿', price: 0.9, description: 'Pearl necklace' },
+                { id: 8, name: 'Watch', icon: '⌚', price: 1.1, description: 'Luxury gold watch' },
+                { id: 9, name: 'Earrings', icon: '💎', price: 0.6, description: 'Diamond stud earrings' },
+                { id: 10, name: 'Bracelet', icon: '📿', price: 0.8, description: 'Silver charm bracelet' },
+                { id: 11, name: 'Tie', icon: '👔', price: 0.4, description: 'Business silk tie' },
+                { id: 12, name: 'Bow Tie', icon: '🎀', price: 0.5, description: 'Classic bow tie' },
+                { id: 13, name: 'Scarf', icon: '🧣', price: 0.6, description: 'Warm winter scarf' },
+                { id: 14, name: 'Gloves', icon: '🧤', price: 0.5, description: 'Leather gloves' },
+                { id: 15, name: 'Belt', icon: '👟', price: 0.7, description: 'Designer leather belt' },
+                { id: 16, name: 'Helmet', icon: '⛑️', price: 1.0, description: 'Protective combat helmet' },
+                { id: 17, name: 'Mask', icon: '🎭', price: 0.9, description: 'Mysterious masquerade mask' },
+                { id: 18, name: 'Cape', icon: '🦸', price: 1.4, description: 'Superhero cape' },
+                { id: 19, name: 'Wings', icon: '🦋', price: 1.6, description: 'Magical fairy wings' },
+                { id: 20, name: 'Halo', icon: '😇', price: 1.8, description: 'Angelic halo' },
+                { id: 21, name: 'Horns', icon: '😈', price: 1.7, description: 'Devilish horns' },
+                { id: 22, name: 'Headphones', icon: '🎧', price: 0.8, description: 'Premium headphones' },
+                { id: 23, name: 'Microphone', icon: '🎤', price: 0.9, description: 'Professional microphone' },
+                { id: 24, name: 'Guitar', icon: '🎸', price: 2.0, description: 'Electric guitar' }
+            ],
+            myAccessories: [],
+            merchItems: [
+                { id: 1, name: 'MonApe Tee', icon: '👕', price: 45 },
+                { id: 2, name: 'Ape Cap', icon: '🧢', price: 35 },
+                { id: 3, name: 'Hoodie Pro', icon: '🧥', price: 85 },
+                { id: 4, name: 'Sneakers', icon: '👟', price: 120 },
+                { id: 5, name: 'Backpack', icon: '🎒', price: 65 },
+                { id: 6, name: 'Jacket', icon: '🧥', price: 95 }
+            ],
+            cart: [],
+            wishlist: [],
+            orders: [
+                { id: 1, title: 'MonApe Tee & Cap', status: 'processing', progress: 60, items: ['MonApe Tee', 'Ape Cap'], total: 80, date: 'Nov 10, 2025', tracking: 'MNP123456789' },
+                { id: 2, title: 'Hoodie Pro', status: 'shipped', progress: 80, items: ['Hoodie Pro'], total: 85, date: 'Nov 8, 2025', tracking: 'MNP987654321' },
+                { id: 3, title: 'Sneakers', status: 'delivered', progress: 100, items: ['Sneakers'], total: 120, date: 'Nov 5, 2025', tracking: 'MNP456789123' }
+            ],
+            tokens: [
+                { symbol: 'MON', name: 'Monad', balance: 1250.50, icon: '💎' },
+                { symbol: 'MONAPE', name: 'MonApe Token', balance: 5000, icon: '🐵' },
+                { symbol: 'USDT', name: 'Tether', balance: 850.25, icon: '💵' }
+            ],
+            transactions: [
+                { type: 'received', amount: '+50 MON', from: '0xabc...def', date: 'Nov 13, 2025' },
+                { type: 'sent', amount: '-25 MONAPE', to: '0xdef...ghi', date: 'Nov 12, 2025' },
+                { type: 'swap', amount: '100 MON → 150 USDT', date: 'Nov 11, 2025' }
+            ],
+            selectedNFT: null,
+            selectedAccessory: null,
+            assetSelectorMode: null,
+            currentPurchase: null,
+            transactionType: null,
+            currentOrder: null
+        };
+
+        // Initialize App
+        function initApp() {
+            setupNavigation();
+            renderMarket();
+            renderCollections();
+            renderAccessories();
+            renderMerchItems();
+            renderMyNFTs();
+            renderMyAccessories();
+            renderTokenBalances();
+            renderTransactionHistory();
+            renderModifiedNFTs();
+            setupCarousel();
+            setupCreateCards();
+            setupLayerBuilder();
+            setupTransferWallets();
+            setupAssetTabs();
+            setupPinInputs();
+        }
+
+        // Navigation
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.dataset.section;
+                    switchSection(section);
+                });
+            });
+
+            document.querySelectorAll('.sub-nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (item.dataset.subsection) {
+                        switchSubsection(item.dataset.subsection);
+                    } else if (item.dataset.assetTab) {
+                        switchAssetTab(item.dataset.assetTab);
+                    }
+                });
+            });
+
+            document.getElementById('notificationBtn').addEventListener('click', () => {
+                document.getElementById('notificationPanel').classList.add('active');
+            });
+
+            document.getElementById('supportBtn').addEventListener('click', () => {
+                document.getElementById('supportPanel').classList.add('active');
+            });
+
+            document.getElementById('backToMarket').addEventListener('click', () => {
+                document.getElementById('collectionView').classList.remove('active');
+                document.querySelector('[data-section="create"][data-subsection="market"]').classList.add('active');
+            });
+        }
+
+        function switchSection(section) {
+            state.currentSection = section;
+            
+            document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === section);
+            });
+
+            document.querySelectorAll('.sub-nav').forEach(nav => {
+                nav.classList.toggle('active', nav.dataset.section === section);
+            });
+
+            const activeSubNav = document.querySelector(`.sub-nav.active[data-section="${section}"]`);
+            if (activeSubNav) {
+                const firstSubItem = activeSubNav.querySelector('.sub-nav-item');
+                if (firstSubItem) {
+                    const subsection = section === 'create' ? 'market' : firstSubItem.dataset.subsection;
+                    switchSubsection(subsection);
+                }
+            }
+
+            updateHeaderTitle();
+        }
+
+        function switchSubsection(subsection) {
+            state.currentSubsection = subsection;
+            
+            const currentNav = document.querySelector(`.sub-nav.active[data-section="${state.currentSection}"]`);
+            if (currentNav) {
+                currentNav.querySelectorAll('.sub-nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.subsection === subsection);
+                });
+            }
+
+            showContent();
+        }
+
+        function switchAssetTab(tab) {
+            state.currentAssetTab = tab;
+            
+            document.querySelectorAll('[data-asset-tab]').forEach(el => {
+                if (el.classList.contains('sub-nav-item')) {
+                    el.classList.toggle('active', el.dataset.assetTab === tab);
+                } else if (el.classList.contains('asset-tab-content')) {
+                    el.classList.toggle('active', el.dataset.assetTab === tab);
+                }
+            });
+        }
+
+        function showContent() {
+            document.querySelectorAll('.section-content').forEach(content => {
+                const matches = content.dataset.section === state.currentSection &&
+                               content.dataset.subsection === state.currentSubsection;
+                content.classList.toggle('active', matches);
+            });
+        }
+
+        function updateHeaderTitle() {
+            const titles = {
+                create: 'Create',
+                enhance: 'Enhance',
+                merch: 'Merchandise',
+                wallet: 'Wallet',
+                account: 'Account'
+            };
+            document.getElementById('headerTitle').textContent = titles[state.currentSection];
+        }
+
+        function setupAssetTabs() {
+            // Already handled in switchAssetTab
+        }
+
+        // Market Rendering
+        function renderMarket() {
+            const allNFTs = [...state.marketNFTs, ...state.modifiedNFTs];
+            const container = document.getElementById('nftMarket');
+            container.innerHTML = allNFTs.map(nft => `
+                <div class="nft-card">
+                    <div class="nft-image">
+                        ${nft.icon}
+                        <div class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</div>
+                    </div>
+                    <div class="nft-info">
+                        <div class="nft-name">${nft.name}</div>
+                        <div class="nft-price">${nft.price} MON</div>
+                        <div class="nft-actions">
+                            <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
+                            <button class="btn btn-secondary btn-small" onclick="viewNFT(${nft.id})">Details</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Setup filters
+            setupMarketFilters();
+        }
+
+        function setupMarketFilters() {
+            const searchInput = document.getElementById('marketSearch');
+            const rarityFilter = document.getElementById('rarityFilter');
+            const priceFilter = document.getElementById('priceFilter');
+            const typeFilter = document.getElementById('typeFilter');
+            const clearBtn = document.getElementById('clearFilters');
+
+            const applyFilters = () => {
+                const search = searchInput.value.toLowerCase();
+                const rarity = rarityFilter.value;
+                const price = priceFilter.value;
+                const type = typeFilter.value;
+
+                let filtered = [...state.marketNFTs, ...state.modifiedNFTs];
+
+                if (search) {
+                    filtered = filtered.filter(nft => nft.name.toLowerCase().includes(search));
+                }
+                if (rarity) {
+                    filtered = filtered.filter(nft => nft.rarity === rarity);
+                }
+                if (price) {
+                    if (price === '0-5') filtered = filtered.filter(nft => nft.price <= 5);
+                    if (price === '5-10') filtered = filtered.filter(nft => nft.price > 5 && nft.price <= 10);
+                    if (price === '10+') filtered = filtered.filter(nft => nft.price > 10);
+                }
+                if (type) {
+                    filtered = filtered.filter(nft => nft.type === type);
+                }
+
+                const container = document.getElementById('nftMarket');
+                container.innerHTML = filtered.map(nft => `
+                    <div class="nft-card">
+                        <div class="nft-image">
+                            ${nft.icon}
+                            <div class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</div>
+                        </div>
+                        <div class="nft-info">
+                            <div class="nft-name">${nft.name}</div>
+                            <div class="nft-price">${nft.price} MON</div>
+                            <div class="nft-actions">
+                                <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
+                                <button class="btn btn-secondary btn-small" onclick="viewNFT(${nft.id})">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            };
+
+            searchInput.addEventListener('input', applyFilters);
+            rarityFilter.addEventListener('change', applyFilters);
+            priceFilter.addEventListener('change', applyFilters);
+            typeFilter.addEventListener('change', applyFilters);
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                rarityFilter.value = '';
+                priceFilter.value = '';
+                typeFilter.value = '';
+                applyFilters();
+            });
+        }
+
+        // Collections
+        function renderCollections() {
+            const container = document.getElementById('collectionScroll');
+            container.innerHTML = state.collections.map(col => `
+                <div class="collection-card" onclick="viewCollection(${col.id})">
+                    <div class="collection-icon">${col.icon}</div>
+                    <div class="collection-name">${col.name}</div>
+                    <div class="collection-stats">
+                        <div class="collection-stat">
+                            <div class="collection-stat-value">${col.nftCount}</div>
+                            <div class="collection-stat-label">NFTs</div>
+                        </div>
+                        <div class="collection-stat">
+                            <div class="collection-stat-value">${col.volume}</div>
+                            <div class="collection-stat-label">Volume</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupCarousel() {
+            const scroll = document.getElementById('collectionScroll');
+            const left = document.getElementById('carouselLeft');
+            const right = document.getElementById('carouselRight');
+
+            left.addEventListener('click', () => {
+                scroll.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+
+            right.addEventListener('click', () => {
+                scroll.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        }
+
+        function viewCollection(id) {
+            const collection = state.collections.find(c => c.id === id);
+            const collectionNFTs = [...state.marketNFTs, ...state.modifiedNFTs].filter(nft => nft.collection === collection.name);
+            
+            document.getElementById('collectionViewTitle').textContent = collection.name;
+            const container = document.getElementById('collectionNFTs');
+            container.innerHTML = collectionNFTs.map(nft => `
+                <div class="nft-card">
+                    <div class="nft-image">
+                        ${nft.icon}
+                        <div class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</div>
+                    </div>
+                    <div class="nft-info">
+                        <div class="nft-name">${nft.name}</div>
+                        <div class="nft-price">${nft.price} MON</div>
+                        <div class="nft-actions">
+                            <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelector('[data-section="create"][data-subsection="market"]').classList.remove('active');
+            document.getElementById('collectionView').classList.add('active');
+        }
+
+        // Create Section
+        function setupCreateCards() {
+            document.querySelectorAll('.create-type-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const type = card.dataset.type;
+                    document.getElementById('createTypeCards').style.display = 'none';
+                    if (type === 'nft') {
+                        document.getElementById('nftCreator').classList.add('active');
+                    } else {
+                        document.getElementById('collectionCreator').classList.add('active');
+                    }
+                });
+            });
+
+            document.getElementById('backToCreateMain').addEventListener('click', () => {
+                document.getElementById('nftCreator').classList.remove('active');
+                document.getElementById('createTypeCards').style.display = 'grid';
+            });
+
+            document.getElementById('backToCreateMainCol').addEventListener('click', () => {
+                document.getElementById('collectionCreator').classList.remove('active');
+                document.getElementById('createTypeCards').style.display = 'grid';
+            });
+        }
+
+        function setupLayerBuilder() {
+            const layerUpload = document.getElementById('layerUpload');
+            layerUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const layer = {
+                            id: Date.now(),
+                            name: file.name,
+                            data: event.target.result
+                        };
+                        state.layers.push(layer);
+                        renderLayers();
+                        updateLayerPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function renderLayers() {
+            const container = document.getElementById('layerList');
+            container.innerHTML = state.layers.map((layer, index) => `
+                <div class="layer-item">
+                    <span>${layer.name}</span>
+                    <div class="layer-controls">
+                        <button class="btn btn-secondary btn-small" onclick="moveLayer(${index}, -1)" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="btn btn-secondary btn-small" onclick="moveLayer(${index}, 1)" ${index === state.layers.length - 1 ? 'disabled' : ''}>↓</button>
+                        <button class="btn btn-secondary btn-small" onclick="removeLayer(${index})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function moveLayer(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < state.layers.length) {
+                [state.layers[index], state.layers[newIndex]] = [state.layers[newIndex], state.layers[index]];
+                renderLayers();
+                updateLayerPreview();
+            }
+        }
+
+        function removeLayer(index) {
+            state.layers.splice(index, 1);
+            renderLayers();
+            updateLayerPreview();
+        }
+
+        function updateLayerPreview() {
+            const preview = document.getElementById('layerPreview');
+            if (state.layers.length === 0) {
+                preview.innerHTML = '<span style="color: var(--text-secondary);">Layer preview</span>';
+                return;
+            }
+
+            preview.innerHTML = state.layers.map(layer => 
+                `<img src="${layer.data}" style="position: absolute; width: 100%; height: 100%; object-fit: contain;">`
+            ).join('');
+        }
+
+        function createNFT() {
+            const name = document.getElementById('nftName').value;
+            const description = document.getElementById('nftDescription').value;
+            const rarity = document.getElementById('nftRarity').value;
+            const collection = document.getElementById('nftCollection').value;
+
+            if (!name) {
+                showToast('Please enter NFT name', 'error');
+                return;
+            }
+
+            const metadata = {
+                name,
+                description,
+                rarity,
+                collection,
+                layers: state.layers.length,
+                createdAt: new Date().toISOString()
+            };
+
+            const newNFT = {
+                id: Date.now(),
+                name,
+                icon: '🎨',
+                price: 0,
+                rarity,
+                type: 'regular',
+                collection: collection || 'None',
+                metadata
+            };
+
+            state.myNFTs.push(newNFT);
+            showToast('NFT created successfully! 🎉', 'success');
+            
+            // Reset form
+            document.getElementById('nftName').value = '';
+            document.getElementById('nftDescription').value = '';
+            state.layers = [];
+            renderLayers();
+            updateLayerPreview();
+            
+            // Switch to assets
+            switchSection('account');
+            switchSubsection('assets');
+            switchAssetTab('nfts');
+        }
+
+        function createCollection() {
+            const name = document.getElementById('collectionName').value;
+            const symbol = document.getElementById('collectionSymbol').value;
+            const description = document.getElementById('collectionDescription').value;
+            const supply = document.getElementById('collectionSupply').value;
+
+            if (!name || !symbol) {
+                showToast('Please fill required fields', 'error');
+                return;
+            }
+
+            const newCollection = {
+                id: Date.now(),
+                name,
+                icon: '📚',
+                nftCount: 0,
+                volume: 0,
+                symbol,
+                description,
+                supply: parseInt(supply) || 0
+            };
+
+            state.collections.push(newCollection);
+            renderCollections();
+            
+            // Add to collection selector
+            const selector = document.getElementById('nftCollection');
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            selector.appendChild(option);
+
+            showToast('Collection created successfully! 🎉', 'success');
+            
+            // Reset and go back
+            document.getElementById('collectionName').value = '';
+            document.getElementById('collectionSymbol').value = '';
+            document.getElementById('collectionDescription').value = '';
+            document.getElementById('collectionSupply').value = '';
+            
+            document.getElementById('collectionCreator').classList.remove('active');
+            document.getElementById('createTypeCards').style.display = 'grid';
+        }
+
+        // List Section
+        function openAssetSelector(mode) {
+            state.assetSelectorMode = mode;
+            const modal = document.getElementById('assetSelectorModal');
+            const title = document.getElementById('assetSelectorTitle');
+            const grid = document.getElementById('assetSelectorGrid');
+
+            if (mode === 'list') {
+                title.textContent = 'Select Item to List';
+                const items = [...state.myNFTs];
+                grid.innerHTML = items.map(item => `
+                    <div class="nft-card" onclick="selectAsset('list', ${item.id}, '${item.name}')">
+                        <div class="nft-image">${item.icon}</div>
+                        <div class="nft-info">
+                            <div class="nft-name">${item.name}</div>
+                            <div class="nft-price">${item.price || 'Not listed'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else if (mode === 'nft') {
+                title.textContent = 'Select NFT';
+                grid.innerHTML = state.myNFTs.map(nft => `
+                    <div class="nft-card" onclick="selectAsset('nft', ${nft.id}, '${nft.name}')">
+                        <div class="nft-image">${nft.icon}</div>
+                        <div class="nft-info">
+                            <div class="nft-name">${nft.name}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else if (mode === 'accessory') {
+                title.textContent = 'Select Accessory';
+                grid.innerHTML = state.myAccessories.map(acc => `
+                    <div class="nft-card" onclick="selectAsset('accessory', ${acc.id}, '${acc.name}')">
+                        <div class="nft-image">${acc.icon}</div>
+                        <div class="nft-info">
+                            <div class="nft-name">${acc.name}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            modal.classList.add('active');
+        }
+
+        function selectAsset(mode, id, name) {
+            if (mode === 'list') {
+                document.getElementById('listItemName').value = name;
+                document.getElementById('listingForm').style.display = 'block';
+            } else if (mode === 'nft') {
+                state.selectedNFT = id;
+                document.getElementById('upgradeNFT').value = name;
+                checkUpgradeForm();
+            } else if (mode === 'accessory') {
+                state.selectedAccessory = id;
+                document.getElementById('upgradeAccessory').value = name;
+                checkUpgradeForm();
+            }
+            
+            closeModal('assetSelectorModal');
+        }
+
+        function checkUpgradeForm() {
+            if (state.selectedNFT && state.selectedAccessory) {
+                document.getElementById('upgradeForm').style.display = 'block';
+            }
+        }
+
+        function listItem() {
+            const price = document.getElementById('listPrice').value;
+            if (!price || price <= 0) {
+                showToast('Please enter a valid price', 'error');
+                return;
+            }
+
+            showToast('Item listed successfully! 🎉', 'success');
+            document.getElementById('listingForm').style.display = 'none';
+            document.getElementById('listItemName').value = '';
+            document.getElementById('listPrice').value = '';
+        }
+
+        function openImportModal() {
+            document.getElementById('importModal').classList.add('active');
+        }
+
+        function importNFT() {
+            showToast('NFT imported successfully! 🎉', 'success');
+            closeModal('importModal');
+        }
+
+        function openCollectionUpload() {
+            document.getElementById('uploadCollectionModal').classList.add('active');
+        }
+
+        function processCollectionFile() {
+            const input = document.getElementById('collectionFileInput');
+            if (input.files.length === 0) {
+                showToast('Please select a file', 'error');
+                return;
+            }
+            
+            showToast('Collection uploaded successfully! 🎉', 'success');
+            closeModal('uploadCollectionModal');
+        }
+
+        // Enhance Section
+        function upgradeNFT() {
+            if (!state.selectedNFT || !state.selectedAccessory) {
+                showToast('Please select both NFT and accessory', 'error');
+                return;
+            }
+
+            const nft = state.myNFTs.find(n => n.id === state.selectedNFT);
+            const accessory = state.myAccessories.find(a => a.id === state.selectedAccessory);
+
+            const modifiedNFT = {
+                id: Date.now(),
+                name: `${nft.name} + ${accessory.name}`,
+                icon: `${nft.icon}${accessory.icon}`,
+                price: nft.price + 2,
+                rarity: nft.rarity,
+                type: 'modified',
+                collection: nft.collection
+            };
+
+            state.modifiedNFTs.push(modifiedNFT);
+            state.myAccessories = state.myAccessories.filter(a => a.id !== state.selectedAccessory);
+            
+            renderModifiedNFTs();
+            renderMyAccessories();
+            renderMarket();
+            
+            showToast('NFT upgraded successfully! 🎉', 'success');
+            
+            document.getElementById('upgradeForm').style.display = 'none';
+            document.getElementById('upgradeNFT').value = '';
+            document.getElementById('upgradeAccessory').value = '';
+            state.selectedNFT = null;
+            state.selectedAccessory = null;
+        }
+
+        function renderModifiedNFTs() {
+            const container = document.getElementById('modifiedNFTs');
+            if (state.modifiedNFTs.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">No modified NFTs yet</p>';
+                return;
+            }
+            container.innerHTML = state.modifiedNFTs.map(nft => `
+                <div class="nft-card">
+                    <div class="nft-image">${nft.icon}</div>
+                    <div class="nft-info">
+                        <div class="nft-name">${nft.name}</div>
+                        <div class="nft-price">${nft.price} MON</div>
+                        <button class="btn btn-primary btn-small" style="width: 100%;" onclick="listModifiedNFT(${nft.id})">List</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function listModifiedNFT(id) {
+            showToast('Modified NFT listed successfully! 🎉', 'success');
+            const nft = state.modifiedNFTs.find(n => n.id === id);
+            if (nft) {
+                state.marketNFTs.push(nft);
+                renderMarket();
+            }
+        }
+
+        function renderAccessories() {
+            const container = document.getElementById('accessoriesShop');
+            container.innerHTML = state.accessories.map(acc => `
+                <div class="nft-card">
+                    <div class="nft-image">${acc.icon}</div>
+                    <div class="nft-info">
+                        <div class="nft-name">${acc.name}</div>
+                        <div class="nft-price">${acc.price} MON</div>
+                        <div class="nft-actions">
+                            <button class="btn btn-primary btn-small" onclick="buyAccessory(${acc.id})">Purchase</button>
+                            <button class="btn btn-secondary btn-small" onclick="viewAccessoryDetails(${acc.id})">Details</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewAccessoryDetails(id) {
+            const acc = state.accessories.find(a => a.id === id);
+            if (!acc) return;
+
+            document.getElementById('accDetailIcon').textContent = acc.icon;
+            document.getElementById('accDetailName').textContent = acc.name;
+            document.getElementById('accDetailDesc').textContent = acc.description;
+            document.getElementById('accDetailPrice').textContent = `${acc.price} MON`;
+            
+            state.currentAccessoryView = id;
+            openModal('accessoryDetailModal');
+        }
+
+        function buyAccessoryFromDetails() {
+            closeModal('accessoryDetailModal');
+            if (state.currentAccessoryView) {
+                buyAccessory(state.currentAccessoryView);
+            }
+        }
+
+        function buyAccessory(id) {
+            const acc = state.accessories.find(a => a.id === id);
+            
+            document.getElementById('buyNFTContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 100px; margin-bottom: 20px;">${acc.icon}</div>
+                    <h3 style="margin-bottom: 12px;">${acc.name}</h3>
+                    <p style="color: var(--text-secondary);">${acc.description}</p>
+                </div>
+                <div class="transaction-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Price:</span>
+                        <span class="summary-value">${acc.price} MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Gas Fee:</span>
+                        <span class="summary-value">0.02 MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total:</span>
+                        <span class="summary-value" style="color: var(--primary);">${(acc.price + 0.02).toFixed(2)} MON</span>
+                    </div>
+                </div>
+            `;
+            
+            state.currentPurchase = {type: 'accessory', item: acc};
+            openModal('buyNFTModal');
+        }
+
+        // Merch Section
+        function renderMerchItems() {
+            const container = document.getElementById('merchItems');
+            container.innerHTML = state.merchItems.map(item => `
+                <div class="nft-card">
+                    <div class="nft-image">${item.icon}</div>
+                    <div class="nft-info">
+                        <div class="nft-name">${item.name}</div>
+                        <div class="nft-price">${item.price}</div>
+                        <div class="nft-actions">
+                            <button class="btn btn-primary btn-small" onclick="addToCart(${item.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const item = state.merchItems.find(m => m.id === id);
+            const existing = state.cart.find(c => c.id === id);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                state.cart.push({...item, quantity: 1});
+            }
+            
+            renderCart();
+            showToast(`${item.name} added to cart! 🎉`, 'success');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const totalEl = document.getElementById('cartTotal');
+            
+            if (state.cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">Cart is empty</p>';
+                totalEl.textContent = 'Total: $0.00';
+                return;
+            }
+            
+            container.innerHTML = state.cart.map(item => `
+                <div class="card" style="display: flex; align-items: center; gap: 20px; margin-bottom: 16px;">
+                    <div style="font-size: 48px;">${item.icon}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; font-size: 18px;">${item.name}</div>
+                        <div style="color: var(--text-secondary);">${item.price}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button class="btn btn-secondary btn-small" onclick="updateCartQty(${item.id}, -1)">-</button>
+                        <span style="min-width: 40px; text-align: center;">${item.quantity}</span>
+                        <button class="btn btn-secondary btn-small" onclick="updateCartQty(${item.id}, 1)">+</button>
+                    </div>
+                    <div style="font-weight: 700; font-size: 20px;">${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+            
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalEl.textContent = `Total: ${total.toFixed(2)}`;
+        }
+
+        function updateCartQty(id, delta) {
+            const item = state.cart.find(c => c.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    state.cart = state.cart.filter(c => c.id !== id);
+                }
+                renderCart();
+            }
+        }
+
+        function checkout() {
+            if (state.cart.length === 0) {
+                showToast('Cart is empty!', 'error');
+                return;
+            }
+            showToast('Checkout successful! 🎉', 'success');
+            
+            // Create order
+            const newOrder = {
+                id: Date.now(),
+                title: state.cart.map(i => i.name).join(' & '),
+                status: 'processing',
+                progress: 20,
+                items: state.cart.map(i => `${i.name} (${i.quantity}x)`),
+                total: state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 10,
+                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+                tracking: 'MNP' + Math.random().toString().slice(2, 11)
+            };
+            
+            state.orders.unshift(newOrder);
+            state.cart = [];
+            renderCart();
+            renderOrders();
+        }
+
+        // Account Section
+        function renderMyNFTs() {
+            const container = document.getElementById('myNFTGallery');
+            container.innerHTML = state.myNFTs.map(nft => `
+                <div class="nft-card">
+                    <div class="nft-image">
+                        ${nft.icon}
+                        <div class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</div>
+                    </div>
+                    <div class="nft-info">
+                        <div class="nft-name">${nft.name}</div>
+                        <div class="nft-price">${nft.price ? nft.price + ' MON' : 'Not listed'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMyAccessories() {
+            const container = document.getElementById('myAccessories');
+            if (state.myAccessories.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">No accessories yet</p>';
+                return;
+            }
+            container.innerHTML = state.myAccessories.map(acc => `
+                <div class="nft-card">
+                    <div class="nft-image">${acc.icon}</div>
+                    <div class="nft-info">
+                        <div class="nft-name">${acc.name}</div>
+                        <div class="nft-price" style="color: var(--success);">✓ Owned</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTokenBalances() {
+            const container = document.getElementById('tokenBalances');
+            container.innerHTML = state.tokens.map(token => `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="font-size: 48px;">${token.icon}</div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700;">${token.name}</div>
+                                <div style="color: var(--text-secondary);">${token.symbol}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 28px; font-weight: bold;">${token.balance}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTransactionHistory() {
+            const container = document.getElementById('transactionHistory');
+            container.innerHTML = state.transactions.map(tx => `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 18px; font-weight: 600; text-transform: capitalize;">${tx.type}</div>
+                            <div style="color: var(--text-secondary); font-size: 14px;">${tx.date}</div>
+                        </div>
+                        <div style="font-size: 20px; font-weight: bold;">${tx.amount}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupTransferWallets() {
+            document.querySelectorAll('.transfer-wallet').forEach(wallet => {
+                wallet.addEventListener('click', () => {
+                    document.querySelectorAll('.transfer-wallet').forEach(w => w.classList.remove('active'));
+                    wallet.classList.add('active');
+                });
+            });
+        }
+
+        // Wallet Functions
+        function sendTransaction() {
+            // Show confirmation modal flow
+            openModal('pinModal');
+            state.transactionType = 'send';
+        }
+
+        function swapTokens() {
+            // Show confirmation modal flow
+            openModal('pinModal');
+            state.transactionType = 'swap';
+        }
+
+        function importFunds() {
+            // Show confirmation modal flow
+            openModal('pinModal');
+            state.transactionType = 'import';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard! 📋', 'success');
+            });
+        }
+
+        // Profile
+        function saveProfile() {
+            showToast('Profile updated successfully! 🎉', 'success');
+        }
+
+        function toggleSetting(el) {
+            el.classList.toggle('active');
+            showToast('Setting updated! ✓', 'success');
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function closePanel(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type] || icons.success}</div>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.4s ease reverse';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        // Social Links
+        function openSocial(platform) {
+            const links = {
+                twitter: 'https://twitter.com',
+                discord: 'https://discord.com',
+                tiktok: 'https://tiktok.com',
+                telegram: 'https://telegram.org'
+            };
+            window.open(links[platform], '_blank');
+        }
+
+        // Buy NFT
+        function buyNFT(id) {
+            const allNFTs = [...state.marketNFTs, ...state.modifiedNFTs];
+            const nft = allNFTs.find(n => n.id === id);
+            
+            if (!nft) {
+                showToast('NFT not found', 'error');
+                return;
+            }
+
+            document.getElementById('buyNFTContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 100px; margin-bottom: 20px;">${nft.icon}</div>
+                    <h3 style="margin-bottom: 12px;">${nft.name}</h3>
+                    <div class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</div>
+                </div>
+                <div class="transaction-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Price:</span>
+                        <span class="summary-value">${nft.price} MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Gas Fee:</span>
+                        <span class="summary-value">0.05 MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total:</span>
+                        <span class="summary-value" style="color: var(--primary);">${(nft.price + 0.05).toFixed(2)} MON</span>
+                    </div>
+                </div>
+            `;
+            
+            state.currentPurchase = nft;
+            openModal('buyNFTModal');
+        }
+
+        function openPinModal() {
+            closeModal('buyNFTModal');
+            openModal('pinModal');
+        }
+
+        function confirmPin() {
+            // Validate PIN (in real app, verify against backend)
+            const pinInputs = document.querySelectorAll('.pin-input');
+            let pin = '';
+            pinInputs.forEach(input => {
+                pin += input.value;
+            });
+
+            if (pin.length !== 4) {
+                showToast('Please enter complete PIN', 'error');
+                return;
+            }
+
+            closeModal('pinModal');
+            openModal('twofaModal');
+        }
+
+        function confirmTwoFA() {
+            const code = document.getElementById('twoFAInput').value;
+            
+            if (code.length !== 6) {
+                showToast('Please enter 6-digit code', 'error');
+                return;
+            }
+
+            closeModal('twofaModal');
+            
+            // Process based on transaction type
+            if (state.transactionType === 'send') {
+                showToast('Tokens sent successfully! 🎉', 'success');
+                state.transactionType = null;
+                openModal('confirmationModal');
+            } else if (state.transactionType === 'swap') {
+                showToast('Tokens swapped successfully! 🎉', 'success');
+                state.transactionType = null;
+                openModal('confirmationModal');
+            } else if (state.transactionType === 'import') {
+                showToast('Funds imported successfully! 🎉', 'success');
+                state.transactionType = null;
+                openModal('confirmationModal');
+            } else if (state.transactionType === 'checkout') {
+                checkout();
+                state.transactionType = null;
+                openModal('confirmationModal');
+            } else if (state.currentPurchase) {
+                // Process purchase based on type
+                if (state.currentPurchase.type === 'nft') {
+                    const purchasedNFT = {...state.currentPurchase.item};
+                    state.myNFTs.push(purchasedNFT);
+                    
+                    // Remove from market
+                    state.marketNFTs = state.marketNFTs.filter(n => n.id !== purchasedNFT.id);
+                    state.modifiedNFTs = state.modifiedNFTs.filter(n => n.id !== purchasedNFT.id);
+                    
+                    renderMarket();
+                    renderMyNFTs();
+                    
+                    setTimeout(() => {
+                        showToast('NFT added to your collection! 🎉', 'success');
+                    }, 1500);
+                } else if (state.currentPurchase.type === 'accessory') {
+                    const acc = state.currentPurchase.item;
+                    state.myAccessories.push({...acc});
+                    renderMyAccessories();
+                    
+                    setTimeout(() => {
+                        showToast(`${acc.name} added to your accessories! 🎉`, 'success');
+                    }, 1500);
+                }
+                
+                state.currentPurchase = null;
+                openModal('confirmationModal');
+            }
+            
+            // Clear inputs
+            document.querySelectorAll('.pin-input').forEach(input => input.value = '');
+            document.getElementById('twoFAInput').value = '';
+        }
+
+        // Setup PIN inputs auto-focus
+        function setupPinInputs() {
+            const pinInputs = document.querySelectorAll('.pin-input');
+            pinInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < pinInputs.length - 1) {
+                        pinInputs[index + 1].focus();
+                    }
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        pinInputs[index - 1].focus();
+                    }
+                });
+            });
+        }
+
+        function viewNFT(id) {
+            showToast('Viewing NFT details...', 'success');
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeModal(overlay.id);
+                }
+            });
+        });
+
+        // Initialize on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+</body>
+</html>
