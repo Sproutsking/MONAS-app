@@ -8,15 +8,15 @@
     <style>
         :root {
             --primary: #8B5CF6;
-            --secondary: #A78BFA;
+            --secondary: #7C3AED;
             --accent: #EC4899;
             --accent-red: #EF4444;
             --success: #22C55E;
             --bg-primary: #000000;
-            --bg-secondary: #1A1A2E;
+            --bg-secondary: #0a0a0a;
             --text-primary: #FFFFFF;
             --text-secondary: #A0AEC0;
-            --border: #2D3748;
+            --border: #8B5CF6;
         }
 
         * {
@@ -31,6 +31,9 @@
             color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+        }
+         ::-webkit-scrollbar {
+            display: none;
         }
 
         body::before {
@@ -54,6 +57,8 @@
             min-height: 100vh;
             position: relative;
             z-index: 1;
+            padding: 0 0 4% 0;
+            overflow: hidden;
         }
 
         /* Sidebar */
@@ -64,9 +69,12 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            border-right: 1px solid var(--border);
+            border-right: 2px solid var(--border);
+            border-left: 2px solid var(--border);
             z-index: 100;
             transition: transform 0.3s ease;
+            left: 4%;
+            box-shadow: 4px 0 24px rgba(139, 92, 246, 0.1);
         }
        
         .sidebar::-webkit-scrollbar { width: 4px; }
@@ -95,6 +103,8 @@
             overflow: hidden;
             font-weight: 600;
             font-size: 14px;
+            background: rgba(173, 127, 173, 0.048);
+            border: 1px solid rgba(168, 136, 168, 0.089);
         }
        
         .nav-item::before {
@@ -181,20 +191,27 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 250px;
+            margin-left: calc(250px + 4%);
             padding: 0;
+            width: calc(92% - 250px);
+            max-width: calc(92% - 250px);
+            overflow-x: hidden;
+            box-sizing: border-box;
+            position: relative;
+            border-right: 2px solid var(--border);
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 40px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
+            padding: 10px 40px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0d0d1a 100%);
+            border-bottom: 2px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
         }
 
         .header-title {
@@ -247,12 +264,16 @@
 
         /* Sub Navigation */
         .sub-nav-container {
-            padding: 20px 40px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
+            top: 0;
+            position: sticky;
+            padding: 0px 0px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0d0d1a 100%);
+            border-bottom: 2px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         .sub-nav {
+            padding: 6px 5%;
             display: none;
             gap: 12px;
             overflow-x: auto;
@@ -263,42 +284,74 @@
         }
 
         .sub-nav-item {
-            padding: 10px 24px;
-            border-radius: 24px;
+            padding: 4px 28px;
+            border-radius: 28px;
             background: transparent;
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sub-nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .sub-nav-item:hover::before {
+            left: 100%;
         }
 
         .sub-nav-item:hover {
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(139, 92, 246, 0.15);
             border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
         }
 
         .sub-nav-item.active {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-color: var(--primary);
             color: white;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5);
         }
 
         /* Content Area */
         .content {
-            padding: 20px;
+            padding: 10px 24px;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .section-content {
             display: none;
             animation: fadeIn 0.5s ease;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
         }
 
         .section-content.active {
             display: flex;
             flex-direction: column;
+            width: 100%;
             max-width: 100%;
             margin-bottom: 20px;
+            overflow-x: hidden;
         }
 
         @keyframes fadeIn {
@@ -314,16 +367,45 @@
 
         /* Card Styles */
         .card {
-            background: var(--bg-secondary);
-            padding: 28px;
-            border-radius: 16px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0d0d1a 100%);
+            padding: 32px;
+            border-radius: 20px;
             margin-bottom: 24px;
             border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card:hover {
-            border-color: rgba(139, 92, 246, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 12px 48px rgba(139, 92, 246, 0.3),
+                        0 0 60px rgba(139, 92, 246, 0.1) inset;
+            transform: translateY(-4px);
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .card-title {
@@ -435,17 +517,21 @@
         .collection-carousel {
             position: relative;
             margin-bottom: 32px;
+            padding: 0 60px;
+            width: 100%;
+            max-width: 100%;
             overflow: hidden;
         }
 
         .collection-scroll {
             display: flex;
-            gap: 20px;
-            overflow-x: auto;
+            gap: 24px;
+            overflow-x: hidden;
             scroll-behavior: smooth;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            padding: 4px;
+            padding: 8px 0;
+            width: 100%;
         }
 
         .collection-scroll::-webkit-scrollbar {
@@ -453,39 +539,71 @@
         }
 
         .collection-card {
-            min-width: 280px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            min-width: 320px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
             backdrop-filter: blur(10px);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .collection-card:hover::before {
+            opacity: 1;
         }
 
         .collection-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25);
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 24px 64px rgba(139, 92, 246, 0.4),
+                        0 0 80px rgba(139, 92, 246, 0.2) inset;
+        }
+
+        .collection-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .collection-icon {
-            font-size: 48px;
+            font-size: 64px;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.5));
         }
 
         .collection-name {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .collection-stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 92, 246, 0.3);
         }
 
         .collection-stat {
@@ -493,46 +611,63 @@
         }
 
         .collection-stat-value {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .collection-stat-label {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .carousel-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(139, 92, 246, 0.8);
-            border: none;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.9));
+            border: 1px solid rgba(139, 92, 246, 0.5);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
         }
 
         .carousel-nav:hover {
-            background: var(--primary);
-            transform: translateY(-50%) scale(1.1);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6);
+        }
+
+        .carousel-nav:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .carousel-nav.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         .carousel-nav.left {
-            left: 10px;
+            left: 0;
         }
 
         .carousel-nav.right {
-            right: 10px;
+            right: 0;
         }
 
         /* NFT Grid */
@@ -540,21 +675,43 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
+        /* NFT Card Enhanced */
         .nft-card {
-            background: var(--bg-secondary);
-            border-radius: 16px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #0d0d1a 100%);
+            border-radius: 20px;
             overflow: hidden;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            position: relative;
+        }
+
+        .nft-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .nft-card:hover::before {
+            opacity: 1;
         }
 
         .nft-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-8px);
             border-color: var(--primary);
-            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.35),
+                        0 0 80px rgba(139, 92, 246, 0.15) inset;
         }
 
         .nft-image {
@@ -607,6 +764,23 @@
             gap: 8px;
         }
 
+        .wishlist-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            background: rgba(236, 72, 153, 0.1);
+            border-color: var(--accent);
+        }
+
+        .wishlist-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
         /* Buttons */
         .btn {
             padding: 12px 24px;
@@ -619,14 +793,31 @@
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
-            background: #7C3AED;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7C3AED, var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(139, 92, 246, 0.5);
         }
 
         .btn-secondary {
@@ -660,19 +851,21 @@
 
         .form-input, .form-select {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background: rgba(139, 92, 246, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
             color: var(--text-primary);
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary);
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(139, 92, 246, 0.12);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
         }
 
         /* Modal */
@@ -828,6 +1021,20 @@
             font-size: 14px;
         }
 
+        .profile-field { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            margin-bottom: 8px; 
+        }
+        
+        .profile-field-label { 
+            color: var(--text-secondary); 
+        }
+
         /* Asset Dashboard */
         .asset-dashboard {
             display: grid;
@@ -935,7 +1142,7 @@
         }
 
         .transfer-wallet {
-            min-width: 200px;
+            width: 200px;
             padding: 20px;
             background: rgba(139, 92, 246, 0.1);
             border: 2px solid var(--border);
@@ -947,7 +1154,7 @@
         .transfer-wallet:hover,
         .transfer-wallet.active {
             border-color: var(--primary);
-            background: rgba(139, 92, 246, 0.2);
+            background: linear-gradient(136deg, black, purple, black);
         }
 
         .transfer-wallet-name {
@@ -967,14 +1174,16 @@
             bottom: 0;
             left: 0;
             right: 0;
+            border-radius: 16px 16px 0 0;
             background: var(--bg-secondary);
             justify-content: space-around;
-            padding: 12px 0;
+            padding: 10px 2%;
             border-top: 1px solid var(--border);
             z-index: 100;
         }
 
         .bottom-nav-item {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -987,6 +1196,9 @@
 
         .bottom-nav-item.active {
             color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+            border: 1px solid var(--primary);
         }
 
         .bottom-nav-icon {
@@ -1069,11 +1281,343 @@
         /* Asset Tab Content */
         .asset-tab-content {
             display: none;
+            width: 100%;
         }
 
         .asset-tab-content.active {
             display: block;
             animation: fadeIn 0.4s ease;
+            width: 100%;
+        }
+
+        /* NFT Trading Panel */
+        .trade-panel-trigger {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trade-panel-trigger:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+            border-color: var(--primary);
+        }
+
+        .trade-panel-trigger h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .trade-panel-trigger p {
+            margin: 4px 0 0 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .trade-panel-icon {
+            font-size: 36px;
+        }
+
+        .trade-panel-content {
+            display: none;
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            animation: slideDown 0.4s ease;
+        }
+
+        .trade-panel-content.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .trade-toggle-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            background: rgba(139, 92, 246, 0.05);
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .trade-toggle-btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .trade-toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .trade-toggle-btn:hover:not(.active) {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .trade-section {
+            display: none;
+        }
+
+        .trade-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .nft-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .nft-selector-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nft-selector-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .nft-selector-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .nft-selector-image {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            position: relative;
+        }
+
+        .nft-selector-info {
+            padding: 8px;
+            text-align: center;
+        }
+
+        .nft-selector-name {
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .trade-form {
+            background: rgba(139, 92, 246, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .selected-items-display {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .selected-items-display h4 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .selected-items-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .selected-item-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .selected-item-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .qr-code-display {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        /* Wallet Content Wrapper */
+        .wallet-content-wrapper {
+            display: flex;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .wallet-main-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .wallet-sidebar {
+            width: 350px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .wallet-quick-stats {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .wallet-quick-stats h3 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .quick-stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .quick-stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .quick-stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .quick-stat-value {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .recent-activity {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .recent-activity h3 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         /* Collection View */
@@ -1104,162 +1648,34 @@
             border-color: var(--primary);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .bottom-nav {
-                display: flex;
-            }
-
-            .header {
-                padding: 20px;
-            }
-
-            .content {
-                padding: 20px;
-                padding-bottom: 80px;
-            }
-
-            .nft-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 16px;
-            }
-
-            .asset-dashboard {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-            }
-
-            .profile-hero {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .transfer-wallets {
-                flex-direction: row;
-                overflow-x: auto;
-            }
-
-            .transfer-wallet {
-                min-width: 180px;
-            }
-
-            .wallet-hero {
-                padding: 24px 20px;
-            }
-
-            .wallet-balance {
-                font-size: 32px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .form-input, .form-select {
-                padding: 12px;
-            }
-
-            .create-type-cards {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .layer-preview {
-                max-width: 100%;
-                height: 300px;
-            }
-
-            .metadata-form {
-                grid-template-columns: 1fr;
-            }
-
-            .file-upload-area {
-                padding: 40px 20px;
-            }
-
-            .import-options {
-                grid-template-columns: 1fr;
-            }
-
-            .collection-card {
-                min-width: 240px;
-            }
-
-            .search-panel {
-                padding: 16px;
-            }
-
-            .search-filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-select {
-                width: 100%;
-            }
-
-            .modal {
-                width: 95%;
-                padding: 24px;
-            }
-
-            .sub-nav-container {
-                padding: 16px 20px;
-            }
-
-            .sub-nav {
-                gap: 8px;
-            }
-
-            .sub-nav-item {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
+        .policy-card { 
+            background: var(--bg-primary); 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            border-left: 4px solid var(--primary); 
         }
-
-        /* Overlay Panel */
-        .overlay-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 380px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            transition: right 0.3s ease;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--border);
+        
+        .card-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 8px; 
         }
-
-        .overlay-panel.active {
-            right: 0;
+        
+        .card-actions { 
+            display: flex; 
+            gap: 8px; 
         }
-
-        .overlay-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .overlay-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
+        
+        .copy-btn, .share-btn { 
+            background: none; 
+            border: 1px solid var(--border); 
+            color: var(--text-secondary); 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 12px; 
         }
 
         /* Search Panel */
@@ -1268,6 +1684,9 @@
             background: var(--bg-primary);
             border-radius: 12px;
             margin-bottom: 24px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .search-input {
@@ -1285,6 +1704,7 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .filter-select {
@@ -1294,22 +1714,47 @@
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 14px;
-        }
-
-        .clear-filters-btn {
-            padding: 10px 16px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .clear-filters-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
+        .filter-select:hover {
             border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .filter-select option {
+            background: var(--bg-secondary);
             color: var(--text-primary);
+            padding: 10px;
+        }
+
+        .clear-filters-btn {
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            color: var(--accent-red);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .clear-filters-btn.active {
+            display: inline-block;
+        }
+
+        .clear-filters-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.05);
         }
 
         /* Import Section */
@@ -1350,6 +1795,740 @@
         .import-desc {
             font-size: 14px;
             color: var(--text-secondary);
+        }
+
+        /* Order Details */
+        .order-card {
+            background: rgba(139, 92, 246, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .order-status.processing {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+        }
+
+        .order-status.shipped {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary);
+        }
+
+        .order-status.delivered {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .order-details-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .order-details-section.active {
+            display: block;
+        }
+
+        .tracking-timeline {
+            margin-top: 24px;
+        }
+
+        .tracking-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .tracking-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: var(--border);
+        }
+
+        .tracking-step.completed::after {
+            background: var(--primary);
+        }
+
+        .tracking-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .tracking-step.completed .tracking-icon {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .tracking-info {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .tracking-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tracking-time {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Footer */
+        .app-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 32px 4%;
+            margin-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .footer-section h4 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(4px);
+            display: inline-block;
+        }
+
+        .footer-bottom {
+            padding-top: 24px;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Live Chat */
+        .live-chat-panel {
+            position: fixed;
+            bottom: 80px;
+            right: calc(4% + 24px);
+            width: 380px;
+            height: 500px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 3000;
+            animation: slideUpChat 0.4s ease;
+        }
+
+        .live-chat-panel.active {
+            display: flex;
+        }
+
+        @keyframes slideUpChat {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: white;
+        }
+
+        .chat-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .chat-message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-message.bot {
+            justify-content: flex-start;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-message.bot .chat-bubble {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .chat-input-area {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .chat-typing {
+            padding: 8px 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-style: italic;
+        }
+        /* Overlay Panel */
+        .overlay-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+        }
+
+        .overlay-panel.active {
+            right: 0;
+        }
+
+        .overlay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .overlay-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .overlay-panel.active {
+            right: 0;
+        }
+
+        .overlay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .overlay-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Merch Item Enhancements */
+        .merch-item-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 2px;
+            font-size: 14px;
+            color: #FFA500;
+        }
+
+        .rating-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .merch-rarity {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .merch-rarity.limited {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+            border: 1px solid #F59E0B;
+        }
+
+        .merch-rarity.exclusive {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .merch-rarity.rare {
+            background: rgba(236, 72, 153, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .merch-rarity.common {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9CA3AF;
+            border: 1px solid #9CA3AF;
+        }
+        
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .transaction-summary {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 24px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .summary-label {
+            color: var(--text-secondary);
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .app-container {
+                padding: 0;
+            }
+
+            .sidebar {
+                border-left: none;
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                width: 100vw;
+                max-width: 100vw;
+                border-right: none;
+            }
+
+            .overlay-panel.active {
+                right: 0;
+            }
+
+            .content {
+                overflow-x: hidden;
+                padding: 20px;
+            }
+
+            .collection-carousel {
+                padding: 0 15px;
+                overflow: visible;
+            }
+
+            .bottom-nav {
+                display: flex;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 20px;
+                padding-bottom: 80px;
+            }
+
+            .nft-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .asset-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .profile-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .transfer-wallets {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .transfer-wallet {
+                flex: 1;
+                padding: 10px 4%;
+                width: fit-content;
+            }
+
+            .wallet-hero {
+                padding: 24px 20px;
+            }
+
+            .wallet-balance {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-input, .form-select {
+                padding: 12px;
+            }
+
+            .create-type-cards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .layer-preview {
+                max-width: 100%;
+                height: 300px;
+            }
+
+            .metadata-form {
+                grid-template-columns: 1fr;
+            }
+
+            .file-upload-area {
+                padding: 40px 20px;
+            }
+
+            .import-options {
+                grid-template-columns: 1fr;
+            }
+
+            .collection-carousel {
+                padding: 0 15px;
+            }
+
+            .collection-card {
+                min-width: 280px;
+            }
+
+            .collection-scroll {
+                overflow-x: auto;
+                gap: 16px;
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            .wallet-content-wrapper {
+                flex-direction: column;
+            }
+
+            .wallet-main-content {
+                max-width: 100%;
+            }
+
+            .wallet-sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .search-panel {
+                padding: 16px;
+            }
+
+            .search-filters {
+                gap: 8px;
+            }
+
+            .filter-select {
+                font-size: 12px;
+                padding: 8px 12px;
+                flex: 1;
+                min-width: 100px;
+            }
+
+            .clear-filters-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            .carousel-nav.left {
+                left: 5px;
+            }
+
+            .carousel-nav.right {
+                right: 5px;
+            }
+
+            .card {
+                width: 100%;
+            }
+
+            .content {
+                width: 100%;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 24px;
+            }
+
+            .sub-nav-container {
+                padding: 16px 20px;
+            }
+
+            .sub-nav {
+                gap: 8px;
+            }
+
+            .sub-nav-item {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -1482,10 +2661,10 @@
                             </select>
                             <select class="filter-select" id="typeFilter">
                                 <option value="">All Types</option>
-                                <option value="regular">Regular</option>
-                                <option value="modified">Modified</option>
+                                <option value="nfts">NFTs</option>
+                                <option value="modified-nfts">Modified NFTs</option>
                             </select>
-                            <button class="clear-filters-btn" id="clearFilters">Clear</button>
+                            <button class="clear-filters-btn" id="clearFilters">✕ Clear</button>
                         </div>
                     </div>
 
@@ -1735,7 +2914,7 @@
                     </div>
                     
                     <!-- Order Details View -->
-                    <div class="card" id="orderDetailsView" style="display: none;">
+                    <div class="card order-details-section" id="orderDetailsView">
                         <button class="back-btn" onclick="closeOrderDetails()">
                             <i class='bx bx-arrow-back'></i>
                             Back to Orders
@@ -1750,25 +2929,73 @@
                         <div class="wallet-balance">1,250.50 MON</div>
                         <div class="wallet-address-badge">0x742d...f0bEb</div>
                     </div>
-                    <div class="card">
-                        <h2 class="card-title">Send Tokens</h2>
-                        <div class="form-group">
-                            <label class="form-label">Token</label>
-                            <select class="form-select">
-                                <option>MON</option>
-                                <option>MONAPE</option>
-                                <option>USDT</option>
-                            </select>
+                    
+                    <div class="wallet-content-wrapper">
+                        <div class="wallet-main-content">
+                            <div class="card">
+                                <h2 class="card-title">Send Tokens</h2>
+                                <div class="form-group">
+                                    <label class="form-label">Token</label>
+                                    <select class="form-select">
+                                        <option>MON</option>
+                                        <option>MONAPE</option>
+                                        <option>USDT</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Recipient Address</label>
+                                    <input type="text" class="form-input" placeholder="0x...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Amount</label>
+                                    <input type="number" class="form-input" placeholder="0.00">
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;" onclick="sendTransaction()">Send</button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Recipient Address</label>
-                            <input type="text" class="form-input" placeholder="0x...">
+                        
+                        <div class="wallet-sidebar">
+                            <div class="wallet-quick-stats">
+                                <h3>Quick Stats</h3>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Total Balance</span>
+                                    <span class="quick-stat-value">1,250.50 MON</span>
+                                </div>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Available</span>
+                                    <span class="quick-stat-value">1,248.50 MON</span>
+                                </div>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Pending</span>
+                                    <span class="quick-stat-value">2.00 MON</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-activity">
+                                <h3>Recent Activity</h3>
+                                <div class="activity-item">
+                                    <div class="activity-icon">↑</div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Sent 25 MON</div>
+                                        <div class="activity-time">2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">↓</div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Received 50 MON</div>
+                                        <div class="activity-time">5 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">🔄</div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Swapped Tokens</div>
+                                        <div class="activity-time">1 day ago</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <input type="number" class="form-input" placeholder="0.00">
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%;" onclick="sendTransaction()">Send</button>
                     </div>
                 </div>
 
@@ -1778,15 +3005,94 @@
                         <div class="wallet-balance">1,250.50 MON</div>
                         <div class="wallet-address-badge">0x742d...f0bEb</div>
                     </div>
-                    <div class="card">
-                        <h2 class="card-title">Receive Tokens</h2>
-                        <div style="text-align: center; padding: 40px;">
-                            <div style="font-size: 100px; margin-bottom: 20px;">📥</div>
-                            <h3 style="margin-bottom: 20px;">Your Wallet Address</h3>
-                            <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 18px; word-break: break-all;">
-                                0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+                    
+                    <div class="wallet-content-wrapper">
+                        <div class="wallet-main-content">
+                            <div class="card">
+                                <h2 class="card-title">Receive Tokens</h2>
+                                <div style="text-align: center; padding: 40px;">
+                                    <div style="font-size: 100px; margin-bottom: 20px;">📥</div>
+                                    <h3 style="margin-bottom: 20px;">Your Wallet Address</h3>
+                                    <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 20px; font-size: 18px; word-break: break-all;">
+                                        0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+                                    </div>
+                                    <button class="btn btn-primary" onclick="copyToClipboard('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb')">Copy Address</button>
+                                </div>
                             </div>
-                            <button class="btn btn-primary" onclick="copyToClipboard('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb')">Copy Address</button>
+                        </div>
+                        
+                        <div class="wallet-sidebar">
+                            <div class="wallet-quick-stats">
+                                <h3>Receive Info</h3>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Network</span>
+                                    <span class="quick-stat-value">Monad</span>
+                                </div>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Confirmations</span>
+                                    <span class="quick-stat-value">12 blocks</span>
+                                </div>
+                                <div class="quick-stat-item">
+                                    <span class="quick-stat-label">Est. Time</span>
+                                    <span class="quick-stat-value">~2 mins</span>
+                                </div>
+                            </div>
+                            
+                            <div class="recent-activity">
+                                <h3>Recent Deposits</h3>
+                                <div class="activity-item">
+                                    <div class="activity-icon">↓</div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Received 50 MON</div>
+                                        <div class="activity-time">5 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon">↓</div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Received 100 USDT</div>
+                                        <div class="activity-time">2 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="app-footer">
+                        <div class="footer-content">
+                            <div class="footer-section">
+                                <h4>MonApe</h4>
+                                <ul class="footer-links">
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Careers</a></li>
+                                    <li><a href="#">Blog</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Support</h4>
+                                <ul class="footer-links">
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Legal</h4>
+                                <ul class="footer-links">
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Terms of Service</a></li>
+                                    <li><a href="#">Cookie Policy</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#"><i class='bx bxl-twitter'></i></a>
+                            <a href="#"><i class='bx bxl-discord-alt'></i></a>
+                            <a href="#"><i class='bx bxl-telegram'></i></a>
+                            <a href="#"><i class='bx bxl-instagram'></i></a>
+                        </div>
+                        <div class="footer-bottom">
+                            © 2025 MonApe. All rights reserved.
                         </div>
                     </div>
                 </div>
@@ -2028,17 +3334,178 @@
                 <div class="section-content" data-section="account" data-subsection="privacy">
                     <div class="card">
                         <h2 class="card-title">Privacy & Policy</h2>
-                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
-                            <h3 style="margin-bottom: 12px;">Data Collection</h3>
-                            <p style="color: var(--text-secondary); line-height: 1.6;">MonApe collects minimal data necessary to provide our services. We collect wallet addresses, transaction history, and profile information you choose to provide. Your private keys are never stored on our servers.</p>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Data Collection</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>MonApe collects minimal data necessary to provide our services. We collect wallet addresses, transaction history, and profile information you choose to provide. Your private keys are never stored on our servers.</p>
                         </div>
-                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
-                            <h3 style="margin-bottom: 12px;">NFT Minting & Trading</h3>
-                            <p style="color: var(--text-secondary); line-height: 1.6;">All NFT transactions are recorded on the blockchain and are publicly visible. When you mint or trade NFTs, your wallet address will be associated with these transactions.</p>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>NFT Minting & Trading</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>All NFT transactions are recorded on the blockchain and are publicly visible. When you mint or trade NFTs, your wallet address will be associated with these transactions. Ensure you understand the permanence of blockchain transactions before proceeding.</p>
                         </div>
-                        <div style="margin-bottom: 24px; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; border-left: 4px solid var(--primary);">
-                            <h3 style="margin-bottom: 12px;">Wallet Security</h3>
-                            <p style="color: var(--text-secondary); line-height: 1.6;">You are solely responsible for maintaining the security of your wallet credentials. MonApe cannot recover lost passwords or private keys. Always enable two-factor authentication.</p>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Wallet Security</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>You are solely responsible for maintaining the security of your wallet credentials. MonApe cannot recover lost passwords or private keys. Always enable two-factor authentication and never share your credentials with anyone.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Transaction Safety</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>Always verify recipient addresses before sending tokens. Blockchain transactions are irreversible. We recommend starting with small test transactions when sending to new addresses. Enable transaction confirmation in settings for additional security.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Marketplace Safety</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>When buying or selling NFTs on MonApe marketplace, verify the authenticity of items before purchase. Check collection verification badges and seller reputation. Report suspicious listings to our support team immediately.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Create & List Safety</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>Ensure you own the rights to all content you mint as NFTs. Do not upload copyrighted material without permission. MonApe reserves the right to remove content that violates intellectual property rights. Creators are responsible for all listed content.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Enhancement & Modification</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>NFT modifications and enhancements are permanent and cannot be undone. When applying accessories or upgrades to your NFTs, carefully review changes before confirming. Modified NFTs may have different market values than originals.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Merchandise Orders</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>Physical merchandise orders are processed separately from digital assets. Shipping times vary by location. Customs fees may apply for international orders. Review your order carefully before checkout as cancellations may not be possible once processing begins.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Wallet & Transfers</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>When transferring funds between wallets, double-check addresses and amounts. Gas fees apply to all blockchain transactions. Transfer times depend on network congestion. MonApe cannot reverse completed transactions or recover funds sent to wrong addresses.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Account Security</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>Protect your account with strong passwords and two-factor authentication. Never share your login credentials. Log out from shared devices. Report suspicious activity immediately. MonApe staff will never ask for your password or private keys.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Disclaimer</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>MonApe is provided "as is" without warranties. Cryptocurrency and NFT markets are volatile and risky. Never invest more than you can afford to lose. The platform is not responsible for market losses, failed transactions due to network issues, or losses resulting from user error. By using MonApe, you accept these risks and agree to use the platform at your own discretion.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Updates to Policy</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>We may update this privacy policy periodically. Users will be notified of significant changes via email or platform notifications. Continued use of the platform after policy updates constitutes acceptance of the new terms.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Cookie Usage</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>We use cookies to enhance user experience, analyze usage, and personalize content. You can manage cookie preferences in your browser settings. Essential cookies are required for site functionality.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Third-Party Services</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p>MonApe integrates with blockchain networks and third-party wallets. These services have their own privacy policies. We do not share personal data without consent, but transaction data is public on the blockchain.</p>
+                        </div>
+                        
+                        <div class="policy-card">
+                            <div class="card-header">
+                                <h3>Contact Us</h3>
+                                <div class="card-actions">
+                                    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+                                    <button class="share-btn">Share</button>
+                                </div>
+                            </div>
+                            <p style="margin-bottom: 12px;">For privacy concerns, support, or general inquiries:</p>
+                            <div style="background: rgba(139, 92, 246, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                                <strong>Email:</strong> support@monape.io
+                                <button class="copy-btn" style="margin-left: 12px;" onclick="copyToClipboard('support@monape.io')">Copy</button>
+                            </div>
+                            <div style="background: rgba(139, 92, 246, 0.1); padding: 12px; border-radius: 8px;">
+                                <strong>Phone:</strong> +1 (555) 123-4567
+                                <button class="copy-btn" style="margin-left: 12px;" onclick="copyToClipboard('+1 (555) 123-4567')">Copy</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2087,6 +3554,77 @@
                     <div class="asset-tab-content" data-asset-tab="nfts">
                         <div class="card">
                             <h2 class="card-title">My NFTs</h2>
+                            
+                            <!-- NFT Trading Panel -->
+                            <div class="trade-panel-trigger" onclick="toggleTradePanel('nft')">
+                                <div>
+                                    <h3>🔄 Trade NFTs</h3>
+                                    <p>Send and receive NFTs with other users</p>
+                                </div>
+                                <div class="trade-panel-icon">
+                                    <i class='bx bx-chevron-down' id="nftTradePanelIcon"></i>
+                                </div>
+                            </div>
+
+                            <div class="trade-panel-content" id="nftTradePanel">
+                                <div class="trade-toggle-buttons">
+                                    <button class="trade-toggle-btn active" onclick="switchTradeMode('nft', 'send')">
+                                        📤 Send NFTs
+                                    </button>
+                                    <button class="trade-toggle-btn" onclick="switchTradeMode('nft', 'receive')">
+                                        📥 Receive NFTs
+                                    </button>
+                                </div>
+
+                                <!-- Send NFTs Section -->
+                                <div class="trade-section active" id="nftSendSection">
+                                    <div class="selected-items-display">
+                                        <h4>Selected NFTs (<span id="nftSelectedCount">0</span>)</h4>
+                                        <div class="selected-items-list" id="nftSelectedList"></div>
+                                    </div>
+
+                                    <h4 style="margin-bottom: 12px; color: var(--text-secondary);">Select NFTs to Send</h4>
+                                    <div class="nft-selector-grid" id="nftSelectorGrid"></div>
+
+                                    <div class="trade-form">
+                                        <div class="form-group">
+                                            <label class="form-label">Recipient Wallet Address *</label>
+                                            <input type="text" class="form-input" id="nftRecipientAddress" placeholder="0x...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Message (Optional)</label>
+                                            <input type="text" class="form-input" id="nftSendMessage" placeholder="Add a note...">
+                                        </div>
+                                        <button class="btn btn-primary" style="width: 100%;" onclick="sendNFTs()">
+                                            Send Selected NFTs
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Receive NFTs Section -->
+                                <div class="trade-section" id="nftReceiveSection">
+                                    <div class="qr-code-display">
+                                        <div class="qr-placeholder">📱</div>
+                                        <p style="margin-top: 16px; color: #333; font-weight: 600;">Scan to Send NFTs</p>
+                                    </div>
+
+                                    <div class="trade-form">
+                                        <h4 style="margin-bottom: 16px;">Your NFT Wallet Address</h4>
+                                        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                                            <p style="word-break: break-all; font-family: monospace; margin-bottom: 12px;">
+                                                0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+                                            </p>
+                                            <button class="btn btn-primary" style="width: 100%;" onclick="copyToClipboard('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb')">
+                                                <i class='bx bx-copy'></i> Copy Address
+                                            </button>
+                                        </div>
+                                        <p style="color: var(--text-secondary); font-size: 13px; text-align: center;">
+                                            Share this address with others to receive NFTs
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="nft-grid" id="myNFTGallery"></div>
                         </div>
                     </div>
@@ -2103,6 +3641,77 @@
                     <div class="asset-tab-content" data-asset-tab="accessories">
                         <div class="card">
                             <h2 class="card-title">My Accessories</h2>
+                            
+                            <!-- Accessory Trading Panel -->
+                            <div class="trade-panel-trigger" onclick="toggleTradePanel('accessory')">
+                                <div>
+                                    <h3>🔄 Trade Accessories</h3>
+                                    <p>Send and receive accessories with other users</p>
+                                </div>
+                                <div class="trade-panel-icon">
+                                    <i class='bx bx-chevron-down' id="accessoryTradePanelIcon"></i>
+                                </div>
+                            </div>
+
+                            <div class="trade-panel-content" id="accessoryTradePanel">
+                                <div class="trade-toggle-buttons">
+                                    <button class="trade-toggle-btn active" onclick="switchTradeMode('accessory', 'send')">
+                                        📤 Send Accessories
+                                    </button>
+                                    <button class="trade-toggle-btn" onclick="switchTradeMode('accessory', 'receive')">
+                                        📥 Receive Accessories
+                                    </button>
+                                </div>
+
+                                <!-- Send Accessories Section -->
+                                <div class="trade-section active" id="accessorySendSection">
+                                    <div class="selected-items-display">
+                                        <h4>Selected Accessories (<span id="accessorySelectedCount">0</span>)</h4>
+                                        <div class="selected-items-list" id="accessorySelectedList"></div>
+                                    </div>
+
+                                    <h4 style="margin-bottom: 12px; color: var(--text-secondary);">Select Accessories to Send</h4>
+                                    <div class="nft-selector-grid" id="accessorySelectorGrid"></div>
+
+                                    <div class="trade-form">
+                                        <div class="form-group">
+                                            <label class="form-label">Recipient Wallet Address *</label>
+                                            <input type="text" class="form-input" id="accessoryRecipientAddress" placeholder="0x...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Message (Optional)</label>
+                                            <input type="text" class="form-input" id="accessorySendMessage" placeholder="Add a note...">
+                                        </div>
+                                        <button class="btn btn-primary" style="width: 100%;" onclick="sendAccessories()">
+                                            Send Selected Accessories
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Receive Accessories Section -->
+                                <div class="trade-section" id="accessoryReceiveSection">
+                                    <div class="qr-code-display">
+                                        <div class="qr-placeholder">📱</div>
+                                        <p style="margin-top: 16px; color: #333; font-weight: 600;">Scan to Send Accessories</p>
+                                    </div>
+
+                                    <div class="trade-form">
+                                        <h4 style="margin-bottom: 16px;">Your Accessories Wallet Address</h4>
+                                        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                                            <p style="word-break: break-all; font-family: monospace; margin-bottom: 12px;">
+                                                0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+                                            </p>
+                                            <button class="btn btn-primary" style="width: 100%;" onclick="copyToClipboard('0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb')">
+                                                <i class='bx bx-copy'></i> Copy Address
+                                            </button>
+                                        </div>
+                                        <p style="color: var(--text-secondary); font-size: 13px; text-align: center;">
+                                            Share this address with others to receive accessories
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="nft-grid" id="myAccessories"></div>
                         </div>
                     </div>
@@ -2364,42 +3973,32 @@
         </div>
     </div>
 
-    <style>
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
-        }
-        .pin-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .transaction-summary {
-            background: rgba(139, 92, 246, 0.1);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            margin-bottom: 24px;
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-        .summary-row:last-child {
-            margin-bottom: 0;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .summary-label {
-            color: var(--text-secondary);
-        }
-        .summary-value {
-            font-weight: 600;
-        }
-    </style>
+    <!-- Live Chat Panel -->
+    <div class="live-chat-panel" id="liveChatPanel">
+        <div class="chat-header">
+            <h3>💬 Live Support</h3>
+            <button class="chat-close" onclick="closeLiveChat()">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">
+                <div class="chat-avatar">🤖</div>
+                <div class="chat-bubble">
+                    Hi! I'm your MonApe support assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+        <div class="chat-typing" id="chatTyping" style="display: none;">
+            Support is typing...
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
+                <button class="chat-send-btn" onclick="sendChatMessage()">
+                    <i class='bx bx-send'></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // State Management
@@ -2409,21 +4008,53 @@
             currentAssetTab: 'overview',
             layers: [],
             myNFTs: [
-                { id: 1, name: 'Cyber Ape #001', icon: '🐵', price: 5.2, rarity: 'epic', collection: 'Apes' },
-                { id: 2, name: 'Quantum Mask #042', icon: '🎭', price: 7.8, rarity: 'legendary', collection: 'Masks' },
-                { id: 3, name: 'Golden Crown #007', icon: '👑', price: 12.0, rarity: 'mythic', collection: 'Crowns' }
+                { id: 1, name: 'Cyber Ape #001', icon: '🐵', price: 5.2, rarity: 'epic', collection: 'Cyber Apes' },
+                { id: 2, name: 'Quantum Mask #042', icon: '🎭', price: 7.8, rarity: 'legendary', collection: 'Digital Masks' },
+                { id: 3, name: 'Golden Crown #007', icon: '👑', price: 12.0, rarity: 'mythic', collection: 'Royal Crowns' }
             ],
-            marketNFTs: [
-                { id: 101, name: 'Space Gorilla', icon: '🦍', price: 8.5, rarity: 'epic', type: 'regular', collection: 'Apes' },
-                { id: 102, name: 'Neon Ape', icon: '🐒', price: 6.2, rarity: 'rare', type: 'regular', collection: 'Apes' },
-                { id: 103, name: 'Diamond Mask', icon: '💎', price: 15.0, rarity: 'legendary', type: 'regular', collection: 'Masks' },
-                { id: 104, name: 'Fire Ape', icon: '🔥', price: 9.3, rarity: 'epic', type: 'regular', collection: 'Apes' }
-            ],
+            marketNFTs: [],
             modifiedNFTs: [],
             collections: [
-                { id: 1, name: 'Apes', icon: '🐵', nftCount: 3, volume: 24.5 },
-                { id: 2, name: 'Masks', icon: '🎭', nftCount: 2, volume: 22.8 },
-                { id: 3, name: 'Crowns', icon: '👑', nftCount: 1, volume: 12.0 }
+                { 
+                    id: 1, 
+                    name: 'Cyber Apes', 
+                    icon: '🐵', 
+                    nftCount: 12, 
+                    volume: 146.4,
+                    nfts: []
+                },
+                { 
+                    id: 2, 
+                    name: 'Digital Masks', 
+                    icon: '🎭', 
+                    nftCount: 12, 
+                    volume: 203.6,
+                    nfts: []
+                },
+                { 
+                    id: 3, 
+                    name: 'Royal Crowns', 
+                    icon: '👑', 
+                    nftCount: 12, 
+                    volume: 287.2,
+                    nfts: []
+                },
+                { 
+                    id: 4, 
+                    name: 'Neon Dragons', 
+                    icon: '🐲', 
+                    nftCount: 12, 
+                    volume: 198.5,
+                    nfts: []
+                },
+                { 
+                    id: 5, 
+                    name: 'Space Warriors', 
+                    icon: '⚔️', 
+                    nftCount: 12, 
+                    volume: 167.8,
+                    nfts: []
+                }
             ],
             accessories: [
                 { id: 1, name: 'Sunglasses', icon: '🕶️', price: 0.5, description: 'Classic aviator sunglasses' },
@@ -2453,19 +4084,67 @@
             ],
             myAccessories: [],
             merchItems: [
-                { id: 1, name: 'MonApe Tee', icon: '👕', price: 45 },
-                { id: 2, name: 'Ape Cap', icon: '🧢', price: 35 },
-                { id: 3, name: 'Hoodie Pro', icon: '🧥', price: 85 },
-                { id: 4, name: 'Sneakers', icon: '👟', price: 120 },
-                { id: 5, name: 'Backpack', icon: '🎒', price: 65 },
-                { id: 6, name: 'Jacket', icon: '🧥', price: 95 }
+                { id: 1, name: 'MonApe Tee', icon: '👕', price: 45, rating: 4.8, reviews: 234, rarity: 'common' },
+                { id: 2, name: 'Ape Cap', icon: '🧢', price: 35, rating: 4.6, reviews: 189, rarity: 'common' },
+                { id: 3, name: 'Hoodie Pro', icon: '🧥', price: 85, rating: 4.9, reviews: 456, rarity: 'exclusive' },
+                { id: 4, name: 'Sneakers', icon: '👟', price: 120, rating: 4.7, reviews: 312, rarity: 'limited' },
+                { id: 5, name: 'Backpack', icon: '🎒', price: 65, rating: 4.5, reviews: 167, rarity: 'rare' },
+                { id: 6, name: 'Jacket', icon: '🧥', price: 95, rating: 4.8, reviews: 278, rarity: 'exclusive' }
             ],
             cart: [],
             wishlist: [],
             orders: [
-                { id: 1, title: 'MonApe Tee & Cap', status: 'processing', progress: 60, items: ['MonApe Tee', 'Ape Cap'], total: 80, date: 'Nov 10, 2025', tracking: 'MNP123456789' },
-                { id: 2, title: 'Hoodie Pro', status: 'shipped', progress: 80, items: ['Hoodie Pro'], total: 85, date: 'Nov 8, 2025', tracking: 'MNP987654321' },
-                { id: 3, title: 'Sneakers', status: 'delivered', progress: 100, items: ['Sneakers'], total: 120, date: 'Nov 5, 2025', tracking: 'MNP456789123' }
+                { 
+                    id: 1, 
+                    title: 'MonApe Tee & Cap', 
+                    status: 'processing', 
+                    progress: 60, 
+                    items: ['MonApe Tee', 'Ape Cap'], 
+                    total: 80, 
+                    date: 'Nov 10, 2025', 
+                    tracking: 'MNP123456789',
+                    trackingSteps: [
+                        { title: 'Order Placed', time: 'Nov 10, 2025 - 10:30 AM', completed: true },
+                        { title: 'Processing', time: 'Nov 10, 2025 - 2:15 PM', completed: true },
+                        { title: 'Shipped', time: 'Nov 11, 2025 - 9:00 AM', completed: true },
+                        { title: 'In Transit', time: 'Estimated: Nov 13, 2025', completed: false },
+                        { title: 'Delivered', time: 'Estimated: Nov 15, 2025', completed: false }
+                    ]
+                },
+                { 
+                    id: 2, 
+                    title: 'Hoodie Pro', 
+                    status: 'shipped', 
+                    progress: 80, 
+                    items: ['Hoodie Pro'], 
+                    total: 85, 
+                    date: 'Nov 8, 2025', 
+                    tracking: 'MNP987654321',
+                    trackingSteps: [
+                        { title: 'Order Placed', time: 'Nov 8, 2025 - 3:20 PM', completed: true },
+                        { title: 'Processing', time: 'Nov 8, 2025 - 5:45 PM', completed: true },
+                        { title: 'Shipped', time: 'Nov 9, 2025 - 11:30 AM', completed: true },
+                        { title: 'In Transit', time: 'Nov 10, 2025 - 2:00 PM', completed: true },
+                        { title: 'Out for Delivery', time: 'Estimated: Nov 13, 2025', completed: false }
+                    ]
+                },
+                { 
+                    id: 3, 
+                    title: 'Sneakers', 
+                    status: 'delivered', 
+                    progress: 100, 
+                    items: ['Sneakers'], 
+                    total: 120, 
+                    date: 'Nov 5, 2025', 
+                    tracking: 'MNP456789123',
+                    trackingSteps: [
+                        { title: 'Order Placed', time: 'Nov 5, 2025 - 1:10 PM', completed: true },
+                        { title: 'Processing', time: 'Nov 5, 2025 - 3:30 PM', completed: true },
+                        { title: 'Shipped', time: 'Nov 6, 2025 - 8:00 AM', completed: true },
+                        { title: 'In Transit', time: 'Nov 7, 2025 - 10:15 AM', completed: true },
+                        { title: 'Delivered', time: 'Nov 8, 2025 - 4:20 PM', completed: true }
+                    ]
+                }
             ],
             tokens: [
                 { symbol: 'MON', name: 'Monad', balance: 1250.50, icon: '💎' },
@@ -2482,11 +4161,15 @@
             assetSelectorMode: null,
             currentPurchase: null,
             transactionType: null,
-            currentOrder: null
+            currentOrder: null,
+            filtersActive: false,
+            selectedNFTsForTrade: [],
+            selectedAccessoriesForTrade: []
         };
 
         // Initialize App
         function initApp() {
+            generateCollectionNFTs();
             setupNavigation();
             renderMarket();
             renderCollections();
@@ -2497,12 +4180,50 @@
             renderTokenBalances();
             renderTransactionHistory();
             renderModifiedNFTs();
+            renderOrders();
+            renderWishlist();
             setupCarousel();
             setupCreateCards();
             setupLayerBuilder();
             setupTransferWallets();
             setupAssetTabs();
             setupPinInputs();
+        }
+
+        // Generate NFTs for each collection
+        function generateCollectionNFTs() {
+            const rarities = ['common', 'rare', 'epic', 'legendary', 'mythic'];
+            const icons = {
+                'Cyber Apes': ['🐵', '🦍', '🐒', '🦧'],
+                'Digital Masks': ['🎭', '😷', '🎪', '🤡'],
+                'Royal Crowns': ['👑', '💎', '🏆', '⭐'],
+                'Neon Dragons': ['🐲', '🐉', '🔥', '⚡'],
+                'Space Warriors': ['⚔️', '🛡️', '🏹', '🗡️']
+            };
+
+            state.collections.forEach(collection => {
+                collection.nfts = [];
+                const collectionIcons = icons[collection.name] || [collection.icon];
+                
+                for (let i = 1; i <= 12; i++) {
+                    const rarity = rarities[Math.floor(Math.random() * rarities.length)];
+                    const icon = collectionIcons[Math.floor(Math.random() * collectionIcons.length)];
+                    const price = (Math.random() * 15 + 2).toFixed(1);
+                    
+                    const nft = {
+                        id: Date.now() + i + collection.id * 1000,
+                        name: `${collection.name} #${String(i).padStart(3, '0')}`,
+                        icon: icon,
+                        price: parseFloat(price),
+                        rarity: rarity,
+                        type: 'regular',
+                        collection: collection.name
+                    };
+                    
+                    collection.nfts.push(nft);
+                    state.marketNFTs.push(nft);
+                }
+            });
         }
 
         // Navigation
@@ -2577,13 +4298,23 @@
         function switchAssetTab(tab) {
             state.currentAssetTab = tab;
             
+            // Update button states
             document.querySelectorAll('[data-asset-tab]').forEach(el => {
                 if (el.classList.contains('sub-nav-item')) {
                     el.classList.toggle('active', el.dataset.assetTab === tab);
-                } else if (el.classList.contains('asset-tab-content')) {
-                    el.classList.toggle('active', el.dataset.assetTab === tab);
                 }
             });
+            
+            // Hide all asset tab content first
+            document.querySelectorAll('.asset-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show only the selected tab
+            const activeTab = document.querySelector(`.asset-tab-content[data-asset-tab="${tab}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
         }
 
         function showContent() {
@@ -2624,7 +4355,7 @@
                         <div class="nft-price">${nft.price} MON</div>
                         <div class="nft-actions">
                             <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
-                            <button class="btn btn-secondary btn-small" onclick="viewNFT(${nft.id})">Details</button>
+                            <button class="btn btn-secondary btn-small" onclick="viewNFTDetails(${nft.id})">Details</button>
                         </div>
                     </div>
                 </div>
@@ -2641,7 +4372,14 @@
             const typeFilter = document.getElementById('typeFilter');
             const clearBtn = document.getElementById('clearFilters');
 
+            const checkFiltersActive = () => {
+                const hasFilters = searchInput.value || rarityFilter.value || priceFilter.value || typeFilter.value;
+                state.filtersActive = hasFilters;
+                clearBtn.classList.toggle('active', hasFilters);
+            };
+
             const applyFilters = () => {
+                checkFiltersActive();
                 const search = searchInput.value.toLowerCase();
                 const rarity = rarityFilter.value;
                 const price = priceFilter.value;
@@ -2650,7 +4388,10 @@
                 let filtered = [...state.marketNFTs, ...state.modifiedNFTs];
 
                 if (search) {
-                    filtered = filtered.filter(nft => nft.name.toLowerCase().includes(search));
+                    filtered = filtered.filter(nft => 
+                        nft.name.toLowerCase().includes(search) ||
+                        nft.collection.toLowerCase().includes(search)
+                    );
                 }
                 if (rarity) {
                     filtered = filtered.filter(nft => nft.rarity === rarity);
@@ -2661,7 +4402,8 @@
                     if (price === '10+') filtered = filtered.filter(nft => nft.price > 10);
                 }
                 if (type) {
-                    filtered = filtered.filter(nft => nft.type === type);
+                    if (type === 'nfts') filtered = filtered.filter(nft => nft.type === 'regular');
+                    if (type === 'modified-nfts') filtered = filtered.filter(nft => nft.type === 'modified');
                 }
 
                 const container = document.getElementById('nftMarket');
@@ -2676,11 +4418,15 @@
                             <div class="nft-price">${nft.price} MON</div>
                             <div class="nft-actions">
                                 <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
-                                <button class="btn btn-secondary btn-small" onclick="viewNFT(${nft.id})">Details</button>
+                                <button class="btn btn-secondary btn-small" onclick="viewNFTDetails(${nft.id})">Details</button>
                             </div>
                         </div>
                     </div>
                 `).join('');
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px; grid-column: 1/-1;">No NFTs found matching your filters</p>';
+                }
             };
 
             searchInput.addEventListener('input', applyFilters);
@@ -2721,19 +4467,49 @@
             const scroll = document.getElementById('collectionScroll');
             const left = document.getElementById('carouselLeft');
             const right = document.getElementById('carouselRight');
+            
+            let currentScroll = 0;
+            const cardWidth = 320 + 24; // card width + gap
+
+            const updateButtons = () => {
+                const maxScroll = scroll.scrollWidth - scroll.clientWidth;
+                currentScroll = scroll.scrollLeft;
+                
+                if (currentScroll <= 0) {
+                    left.classList.add('disabled');
+                } else {
+                    left.classList.remove('disabled');
+                }
+                
+                if (currentScroll >= maxScroll - 1) {
+                    right.classList.add('disabled');
+                } else {
+                    right.classList.remove('disabled');
+                }
+            };
 
             left.addEventListener('click', () => {
-                scroll.scrollBy({ left: -300, behavior: 'smooth' });
+                scroll.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+                setTimeout(updateButtons, 300);
             });
 
             right.addEventListener('click', () => {
-                scroll.scrollBy({ left: 300, behavior: 'smooth' });
+                scroll.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                setTimeout(updateButtons, 300);
             });
+
+            scroll.addEventListener('scroll', updateButtons);
+            
+            // Initial button state
+            updateButtons();
+            
+            // Update on window resize
+            window.addEventListener('resize', updateButtons);
         }
 
         function viewCollection(id) {
             const collection = state.collections.find(c => c.id === id);
-            const collectionNFTs = [...state.marketNFTs, ...state.modifiedNFTs].filter(nft => nft.collection === collection.name);
+            const collectionNFTs = collection.nfts;
             
             document.getElementById('collectionViewTitle').textContent = collection.name;
             const container = document.getElementById('collectionNFTs');
@@ -2748,6 +4524,7 @@
                         <div class="nft-price">${nft.price} MON</div>
                         <div class="nft-actions">
                             <button class="btn btn-primary btn-small" onclick="buyNFT(${nft.id})">Buy</button>
+                            <button class="btn btn-secondary btn-small" onclick="viewNFTDetails(${nft.id})">Details</button>
                         </div>
                     </div>
                 </div>
@@ -2855,15 +4632,6 @@
                 return;
             }
 
-            const metadata = {
-                name,
-                description,
-                rarity,
-                collection,
-                layers: state.layers.length,
-                createdAt: new Date().toISOString()
-            };
-
             const newNFT = {
                 id: Date.now(),
                 name,
@@ -2871,8 +4639,7 @@
                 price: 0,
                 rarity,
                 type: 'regular',
-                collection: collection || 'None',
-                metadata
+                collection: collection || 'None'
             };
 
             state.myNFTs.push(newNFT);
@@ -2910,7 +4677,8 @@
                 volume: 0,
                 symbol,
                 description,
-                supply: parseInt(supply) || 0
+                supply: parseInt(supply) || 0,
+                nfts: []
             };
 
             state.collections.push(newCollection);
@@ -3078,7 +4846,7 @@
         function renderModifiedNFTs() {
             const container = document.getElementById('modifiedNFTs');
             if (state.modifiedNFTs.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">No modified NFTs yet</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px; grid-column: 1/-1;">No modified NFTs yet</p>';
                 return;
             }
             container.innerHTML = state.modifiedNFTs.map(nft => `
@@ -3171,7 +4939,9 @@
         // Merch Section
         function renderMerchItems() {
             const container = document.getElementById('merchItems');
-            container.innerHTML = state.merchItems.map(item => `
+            container.innerHTML = state.merchItems.map(item => {
+                const isInWishlist = state.wishlist.some(w => w.id === item.id);
+                return `
                 <div class="nft-card">
                     <div class="nft-image">${item.icon}</div>
                     <div class="nft-info">
@@ -3179,10 +4949,64 @@
                         <div class="nft-price">${item.price}</div>
                         <div class="nft-actions">
                             <button class="btn btn-primary btn-small" onclick="addToCart(${item.id})">Add to Cart</button>
+                            <button class="btn btn-secondary btn-small wishlist-btn ${isInWishlist ? 'active' : ''}" onclick="toggleWishlist(${item.id})">
+                                <i class='bx ${isInWishlist ? 'bxs-heart' : 'bx-heart'}'></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function toggleWishlist(id) {
+            const item = state.merchItems.find(m => m.id === id);
+            const existingIndex = state.wishlist.findIndex(w => w.id === id);
+            
+            if (existingIndex > -1) {
+                state.wishlist.splice(existingIndex, 1);
+                showToast(`${item.name} removed from wishlist`, 'success');
+            } else {
+                state.wishlist.push({...item});
+                showToast(`${item.name} added to wishlist! 💜`, 'success');
+            }
+            
+            renderMerchItems();
+            renderWishlist();
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlistItems');
+            
+            if (state.wishlist.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px; grid-column: 1/-1;">Your wishlist is empty</p>';
+                return;
+            }
+            
+            container.innerHTML = state.wishlist.map(item => `
+                <div class="nft-card">
+                    <div class="nft-image">${item.icon}</div>
+                    <div class="nft-info">
+                        <div class="nft-name">${item.name}</div>
+                        <div class="nft-price">${item.price}</div>
+                        <div class="nft-actions">
+                            <button class="btn btn-primary btn-small" onclick="addToCart(${item.id})">Add to Cart</button>
+                            <button class="btn btn-secondary btn-small" onclick="removeFromWishlist(${item.id})">Remove</button>
                         </div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function removeFromWishlist(id) {
+            const item = state.wishlist.find(w => w.id === id);
+            state.wishlist = state.wishlist.filter(w => w.id !== id);
+            showToast(`${item.name} removed from wishlist`, 'success');
+            renderWishlist();
+            renderMerchItems();
+        }
+
+        function addToWishList(id) {
+            toggleWishlist(id);
         }
 
         function addToCart(id) {
@@ -3240,29 +5064,201 @@
             }
         }
 
+        function proceedToCheckout() {
+            if (state.cart.length === 0) {
+                showToast('Cart is empty!', 'error');
+                return;
+            }
+
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = 10;
+            const tax = subtotal * 0.08;
+            const total = subtotal + shipping + tax;
+
+            document.getElementById('checkoutContent').innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 16px;">Order Summary</h3>
+                    ${state.cart.map(item => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-size: 24px;">${item.icon}</span>
+                                <div>
+                                    <div style="font-weight: 600;">${item.name}</div>
+                                    <div style="color: var(--text-secondary); font-size: 13px;">Qty: ${item.quantity}</div>
+                                </div>
+                            </div>
+                            <div style="font-weight: 600;">${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="transaction-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal:</span>
+                        <span class="summary-value">${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Shipping:</span>
+                        <span class="summary-value">${shipping.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Tax (8%):</span>
+                        <span class="summary-value">${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total:</span>
+                        <span class="summary-value" style="color: var(--primary);">${total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+
+            openModal('checkoutModal');
+        }
+
+        function confirmCheckout() {
+            closeModal('checkoutModal');
+            state.transactionType = 'checkout';
+            openModal('pinModal');
+        }
+
         function checkout() {
             if (state.cart.length === 0) {
                 showToast('Cart is empty!', 'error');
                 return;
             }
-            showToast('Checkout successful! 🎉', 'success');
             
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + 10 + (subtotal * 0.08);
+
             // Create order
             const newOrder = {
                 id: Date.now(),
-                title: state.cart.map(i => i.name).join(' & '),
+                title: state.cart.map(i => i.name).slice(0, 2).join(' & ') + (state.cart.length > 2 ? ` +${state.cart.length - 2}` : ''),
                 status: 'processing',
                 progress: 20,
                 items: state.cart.map(i => `${i.name} (${i.quantity}x)`),
-                total: state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 10,
+                total: total.toFixed(2),
                 date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
-                tracking: 'MNP' + Math.random().toString().slice(2, 11)
+                tracking: 'MNP' + Math.random().toString().slice(2, 11),
+                trackingSteps: [
+                    { title: 'Order Placed', time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }), completed: true },
+                    { title: 'Processing', time: 'Estimated: Within 2 hours', completed: false },
+                    { title: 'Shipped', time: 'Estimated: Tomorrow', completed: false },
+                    { title: 'In Transit', time: 'Estimated: 2-3 days', completed: false },
+                    { title: 'Delivered', time: 'Estimated: 3-5 days', completed: false }
+                ]
             };
             
             state.orders.unshift(newOrder);
             state.cart = [];
             renderCart();
             renderOrders();
+            
+            showToast('Order placed successfully! 🎉', 'success');
+        }
+
+        // Orders
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            if (state.orders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">No orders yet</p>';
+                return;
+            }
+            
+            container.innerHTML = state.orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <h3 style="margin-bottom: 8px;">${order.title}</h3>
+                            <p style="color: var(--text-secondary); font-size: 14px;">${order.date}</p>
+                        </div>
+                        <div class="order-status ${order.status}">${order.status}</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${order.progress}%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 13px;">Tracking: ${order.tracking}</div>
+                            <div style="font-weight: 600; font-size: 20px; margin-top: 4px;">${order.total}</div>
+                        </div>
+                        <button class="btn btn-primary btn-small" onclick="viewOrderDetails(${order.id})">View Details</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = state.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            state.currentOrder = order;
+            
+            const detailsContent = document.getElementById('orderDetailsContent');
+            detailsContent.innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                        <div>
+                            <h2 style="margin-bottom: 8px;">${order.title}</h2>
+                            <p style="color: var(--text-secondary);">Order placed on ${order.date}</p>
+                        </div>
+                        <div class="order-status ${order.status}">${order.status}</div>
+                    </div>
+                    
+                    <div style="background: rgba(139, 92, 246, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 12px;">Order Details</h3>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-secondary);">Order ID:</span>
+                            <span style="font-weight: 600;">#${order.id}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-secondary);">Tracking Number:</span>
+                            <span style="font-weight: 600;">${order.tracking}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-secondary);">Items:</span>
+                            <span style="font-weight: 600;">${order.items.length}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 12px;">
+                            <span style="color: var(--text-secondary);">Total:</span>
+                            <span style="font-weight: 700; font-size: 20px; color: var(--primary);">${order.total}</span>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(139, 92, 246, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 16px;">Order Items</h3>
+                        ${order.items.map(item => `
+                            <div style="padding: 12px 0; border-bottom: 1px solid var(--border);">
+                                <span style="font-weight: 600;">${item}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h3 style="margin-bottom: 20px;">Tracking Timeline</h3>
+                    <div class="tracking-timeline">
+                        ${order.trackingSteps.map(step => `
+                            <div class="tracking-step ${step.completed ? 'completed' : ''}">
+                                <div class="tracking-icon">${step.completed ? '✓' : '○'}</div>
+                                <div class="tracking-info">
+                                    <div class="tracking-title">${step.title}</div>
+                                    <div class="tracking-time">${step.time}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('ordersList').style.display = 'none';
+            document.getElementById('orderDetailsView').style.display = 'block';
+            document.getElementById('orderDetailsView').classList.add('active');
+        }
+
+        function closeOrderDetails() {
+            document.getElementById('orderDetailsView').classList.remove('active');
+            document.getElementById('orderDetailsView').style.display = 'none';
+            document.getElementById('ordersList').style.display = 'block';
+            state.currentOrder = null;
         }
 
         // Account Section
@@ -3280,12 +5276,21 @@
                     </div>
                 </div>
             `).join('');
+            
+            // Also render NFT selector grid
+            renderNFTSelectorGrid();
         }
 
         function renderMyAccessories() {
             const container = document.getElementById('myAccessories');
             if (state.myAccessories.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px;">No accessories yet</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 60px; grid-column: 1/-1;">No accessories yet</p>';
+                
+                // Clear selector grid too
+                const selectorGrid = document.getElementById('accessorySelectorGrid');
+                if (selectorGrid) {
+                    selectorGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px; grid-column: 1/-1;">No accessories to trade</p>';
+                }
                 return;
             }
             container.innerHTML = state.myAccessories.map(acc => `
@@ -3297,6 +5302,292 @@
                     </div>
                 </div>
             `).join('');
+            
+            // Also render accessory selector grid
+            renderAccessorySelectorGrid();
+        }
+
+        // Trading Panel Functions
+        function toggleTradePanel(type) {
+            const panel = document.getElementById(`${type}TradePanel`);
+            const icon = document.getElementById(`${type}TradePanelIcon`);
+            
+            panel.classList.toggle('active');
+            
+            if (panel.classList.contains('active')) {
+                icon.classList.remove('bx-chevron-down');
+                icon.classList.add('bx-chevron-up');
+            } else {
+                icon.classList.remove('bx-chevron-up');
+                icon.classList.add('bx-chevron-down');
+            }
+        }
+
+        function switchTradeMode(type, mode) {
+            const buttons = document.querySelectorAll(`#${type}TradePanel .trade-toggle-btn`);
+            const sendSection = document.getElementById(`${type}SendSection`);
+            const receiveSection = document.getElementById(`${type}ReceiveSection`);
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (mode === 'send') {
+                sendSection.classList.add('active');
+                receiveSection.classList.remove('active');
+            } else {
+                sendSection.classList.remove('active');
+                receiveSection.classList.add('active');
+            }
+        }
+
+        function renderNFTSelectorGrid() {
+            const container = document.getElementById('nftSelectorGrid');
+            if (!container) return;
+            
+            if (state.myNFTs.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px; grid-column: 1/-1;">No NFTs to trade</p>';
+                return;
+            }
+            
+            container.innerHTML = state.myNFTs.map(nft => `
+                <div class="nft-selector-card ${state.selectedNFTsForTrade.includes(nft.id) ? 'selected' : ''}" onclick="toggleNFTSelection(${nft.id})">
+                    <div class="nft-selector-image">
+                        ${nft.icon}
+                        ${state.selectedNFTsForTrade.includes(nft.id) ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--primary); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">✓</div>' : ''}
+                    </div>
+                    <div class="nft-selector-info">
+                        <div class="nft-selector-name">${nft.name}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAccessorySelectorGrid() {
+            const container = document.getElementById('accessorySelectorGrid');
+            if (!container) return;
+            
+            if (state.myAccessories.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px; grid-column: 1/-1;">No accessories to trade</p>';
+                return;
+            }
+            
+            container.innerHTML = state.myAccessories.map(acc => `
+                <div class="nft-selector-card ${state.selectedAccessoriesForTrade.includes(acc.id) ? 'selected' : ''}" onclick="toggleAccessorySelection(${acc.id})">
+                    <div class="nft-selector-image">
+                        ${acc.icon}
+                        ${state.selectedAccessoriesForTrade.includes(acc.id) ? '<div style="position: absolute; top: 8px; right: 8px; background: var(--primary); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;">✓</div>' : ''}
+                    </div>
+                    <div class="nft-selector-info">
+                        <div class="nft-selector-name">${acc.name}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleNFTSelection(id) {
+            const index = state.selectedNFTsForTrade.indexOf(id);
+            if (index > -1) {
+                state.selectedNFTsForTrade.splice(index, 1);
+            } else {
+                state.selectedNFTsForTrade.push(id);
+            }
+            renderNFTSelectorGrid();
+            updateNFTSelectedDisplay();
+        }
+
+        function toggleAccessorySelection(id) {
+            const index = state.selectedAccessoriesForTrade.indexOf(id);
+            if (index > -1) {
+                state.selectedAccessoriesForTrade.splice(index, 1);
+            } else {
+                state.selectedAccessoriesForTrade.push(id);
+            }
+            renderAccessorySelectorGrid();
+            updateAccessorySelectedDisplay();
+        }
+
+        function updateNFTSelectedDisplay() {
+            const countEl = document.getElementById('nftSelectedCount');
+            const listEl = document.getElementById('nftSelectedList');
+            
+            countEl.textContent = state.selectedNFTsForTrade.length;
+            
+            if (state.selectedNFTsForTrade.length === 0) {
+                listEl.innerHTML = '<p style="color: var(--text-secondary); font-size: 13px;">No NFTs selected</p>';
+                return;
+            }
+            
+            listEl.innerHTML = state.selectedNFTsForTrade.map(id => {
+                const nft = state.myNFTs.find(n => n.id === id);
+                return `
+                    <div class="selected-item-tag">
+                        ${nft.icon} ${nft.name}
+                        <button onclick="toggleNFTSelection(${id})">✕</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateAccessorySelectedDisplay() {
+            const countEl = document.getElementById('accessorySelectedCount');
+            const listEl = document.getElementById('accessorySelectedList');
+            
+            countEl.textContent = state.selectedAccessoriesForTrade.length;
+            
+            if (state.selectedAccessoriesForTrade.length === 0) {
+                listEl.innerHTML = '<p style="color: var(--text-secondary); font-size: 13px;">No accessories selected</p>';
+                return;
+            }
+            
+            listEl.innerHTML = state.selectedAccessoriesForTrade.map(id => {
+                const acc = state.myAccessories.find(a => a.id === id);
+                return `
+                    <div class="selected-item-tag">
+                        ${acc.icon} ${acc.name}
+                        <button onclick="toggleAccessorySelection(${id})">✕</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function sendNFTs() {
+            const address = document.getElementById('nftRecipientAddress').value;
+            const message = document.getElementById('nftSendMessage').value;
+            
+            if (!address) {
+                showToast('Please enter recipient address', 'error');
+                return;
+            }
+            
+            if (state.selectedNFTsForTrade.length === 0) {
+                showToast('Please select at least one NFT to send', 'error');
+                return;
+            }
+            
+            // Show confirmation modal with transaction details
+            const selectedNFTs = state.myNFTs.filter(nft => state.selectedNFTsForTrade.includes(nft.id));
+            const totalValue = selectedNFTs.reduce((sum, nft) => sum + (nft.price || 0), 0);
+            
+            document.getElementById('buyNFTContent').innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 16px;">Confirm NFT Transfer</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                        <p style="margin-bottom: 8px;"><strong>Sending ${selectedNFTs.length} NFT${selectedNFTs.length > 1 ? 's' : ''}:</strong></p>
+                        ${selectedNFTs.map(nft => `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);">${nft.icon} ${nft.name}</div>`).join('')}
+                    </div>
+                </div>
+                <div class="transaction-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Recipient:</span>
+                        <span class="summary-value" style="font-size: 12px;">${address.substring(0, 10)}...${address.substring(address.length - 8)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Estimated Value:</span>
+                        <span class="summary-value">${totalValue.toFixed(2)} MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Gas Fee:</span>
+                        <span class="summary-value">0.05 MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Cost:</span>
+                        <span class="summary-value" style="color: var(--primary);">0.05 MON</span>
+                    </div>
+                </div>
+            `;
+            
+            state.transactionType = 'send-nft';
+            openModal('buyNFTModal');
+        }
+
+        function sendAccessories() {
+            const address = document.getElementById('accessoryRecipientAddress').value;
+            const message = document.getElementById('accessorySendMessage').value;
+            
+            if (!address) {
+                showToast('Please enter recipient address', 'error');
+                return;
+            }
+            
+            if (state.selectedAccessoriesForTrade.length === 0) {
+                showToast('Please select at least one accessory to send', 'error');
+                return;
+            }
+            
+            // Show confirmation modal with transaction details
+            const selectedAccessories = state.myAccessories.filter(acc => state.selectedAccessoriesForTrade.includes(acc.id));
+            const totalValue = selectedAccessories.reduce((sum, acc) => sum + (acc.price || 0), 0);
+            
+            document.getElementById('buyNFTContent').innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 16px;">Confirm Accessory Transfer</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                        <p style="margin-bottom: 8px;"><strong>Sending ${selectedAccessories.length} Accessor${selectedAccessories.length > 1 ? 'ies' : 'y'}:</strong></p>
+                        ${selectedAccessories.map(acc => `<div style="padding: 8px 0; border-bottom: 1px solid var(--border);">${acc.icon} ${acc.name}</div>`).join('')}
+                    </div>
+                </div>
+                <div class="transaction-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Recipient:</span>
+                        <span class="summary-value" style="font-size: 12px;">${address.substring(0, 10)}...${address.substring(address.length - 8)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Estimated Value:</span>
+                        <span class="summary-value">${totalValue.toFixed(2)} MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Gas Fee:</span>
+                        <span class="summary-value">0.03 MON</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Total Cost:</span>
+                        <span class="summary-value" style="color: var(--primary);">0.03 MON</span>
+                    </div>
+                </div>
+            `;
+            
+            state.transactionType = 'send-accessory';
+            openModal('buyNFTModal');
+        }
+
+        function completeTradeSend() {
+            if (state.transactionType === 'send-nft') {
+                const count = state.selectedNFTsForTrade.length;
+                
+                // Remove sent NFTs from my collection
+                state.myNFTs = state.myNFTs.filter(nft => !state.selectedNFTsForTrade.includes(nft.id));
+                
+                // Clear selection
+                state.selectedNFTsForTrade = [];
+                
+                // Update displays
+                renderMyNFTs();
+                updateNFTSelectedDisplay();
+                
+                // Clear form
+                document.getElementById('nftRecipientAddress').value = '';
+                document.getElementById('nftSendMessage').value = '';
+                
+                showToast(`Successfully sent ${count} NFT${count > 1 ? 's' : ''}! 🎉`, 'success');
+            } else if (state.transactionType === 'send-accessory') {
+                const count = state.selectedAccessoriesForTrade.length;
+                
+                // Remove sent accessories from my collection
+                state.myAccessories = state.myAccessories.filter(acc => !state.selectedAccessoriesForTrade.includes(acc.id));
+                
+                // Clear selection
+                state.selectedAccessoriesForTrade = [];
+                
+                // Update displays
+                renderMyAccessories();
+                updateAccessorySelectedDisplay();
+                
+                // Clear form
+                document.getElementById('accessoryRecipientAddress').value = '';
+                document.getElementById('accessorySendMessage').value = '';
+                
+                showToast(`Successfully sent ${count} accessor${count > 1 ? 'ies' : 'y'}! 🎉`, 'success');
+            }
         }
 
         function renderTokenBalances() {
@@ -3345,19 +5636,16 @@
 
         // Wallet Functions
         function sendTransaction() {
-            // Show confirmation modal flow
             openModal('pinModal');
             state.transactionType = 'send';
         }
 
         function swapTokens() {
-            // Show confirmation modal flow
             openModal('pinModal');
             state.transactionType = 'swap';
         }
 
         function importFunds() {
-            // Show confirmation modal flow
             openModal('pinModal');
             state.transactionType = 'import';
         }
@@ -3376,6 +5664,12 @@
         function toggleSetting(el) {
             el.classList.toggle('active');
             showToast('Setting updated! ✓', 'success');
+        }
+
+        function copyText(btn) {
+            const card = btn.closest('.policy-card');
+            const text = card.querySelector('p').textContent;
+            copyToClipboard(text);
         }
 
         // Modal Functions
@@ -3457,7 +5751,7 @@
                 </div>
             `;
             
-            state.currentPurchase = nft;
+            state.currentPurchase = {type: 'nft', item: nft};
             openModal('buyNFTModal');
         }
 
@@ -3467,7 +5761,6 @@
         }
 
         function confirmPin() {
-            // Validate PIN (in real app, verify against backend)
             const pinInputs = document.querySelectorAll('.pin-input');
             let pin = '';
             pinInputs.forEach(input => {
@@ -3493,7 +5786,6 @@
 
             closeModal('twofaModal');
             
-            // Process based on transaction type
             if (state.transactionType === 'send') {
                 showToast('Tokens sent successfully! 🎉', 'success');
                 state.transactionType = null;
@@ -3510,13 +5802,15 @@
                 checkout();
                 state.transactionType = null;
                 openModal('confirmationModal');
+            } else if (state.transactionType === 'send-nft' || state.transactionType === 'send-accessory') {
+                completeTradeSend();
+                state.transactionType = null;
+                openModal('confirmationModal');
             } else if (state.currentPurchase) {
-                // Process purchase based on type
                 if (state.currentPurchase.type === 'nft') {
                     const purchasedNFT = {...state.currentPurchase.item};
                     state.myNFTs.push(purchasedNFT);
                     
-                    // Remove from market
                     state.marketNFTs = state.marketNFTs.filter(n => n.id !== purchasedNFT.id);
                     state.modifiedNFTs = state.modifiedNFTs.filter(n => n.id !== purchasedNFT.id);
                     
@@ -3540,12 +5834,10 @@
                 openModal('confirmationModal');
             }
             
-            // Clear inputs
             document.querySelectorAll('.pin-input').forEach(input => input.value = '');
             document.getElementById('twoFAInput').value = '';
         }
 
-        // Setup PIN inputs auto-focus
         function setupPinInputs() {
             const pinInputs = document.querySelectorAll('.pin-input');
             pinInputs.forEach((input, index) => {
@@ -3563,8 +5855,31 @@
             });
         }
 
-        function viewNFT(id) {
-            showToast('Viewing NFT details...', 'success');
+        function viewNFTDetails(id) {
+            const allNFTs = [...state.marketNFTs, ...state.modifiedNFTs];
+            const nft = allNFTs.find(n => n.id === id);
+            
+            if (!nft) {
+                showToast('NFT not found', 'error');
+                return;
+            }
+
+            document.getElementById('detailIcon').textContent = nft.icon;
+            document.getElementById('detailName').textContent = nft.name;
+            document.getElementById('detailCollection').textContent = nft.collection;
+            document.getElementById('detailRarityBadge').innerHTML = `<span class="rarity-badge rarity-${nft.rarity}">${nft.rarity}</span>`;
+            document.getElementById('detailPrice').textContent = `${nft.price} MON`;
+            document.getElementById('detailOwner').textContent = '0x742d...f0bEb';
+            
+            state.currentNFTView = id;
+            openModal('nftDetailModal');
+        }
+
+        function buyFromDetails() {
+            closeModal('nftDetailModal');
+            if (state.currentNFTView) {
+                buyNFT(state.currentNFTView);
+            }
         }
 
         // Close modals on outside click
@@ -3574,6 +5889,74 @@
                     closeModal(overlay.id);
                 }
             });
+        });
+
+        // Live Chat Functions
+        function openLiveChat() {
+            document.getElementById('liveChatPanel').classList.add('active');
+            document.getElementById('chatInput').focus();
+        }
+
+        function closeLiveChat() {
+            document.getElementById('liveChatPanel').classList.remove('active');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            const messagesContainer = document.getElementById('chatMessages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message user';
+            userMsg.innerHTML = `
+                <div class="chat-bubble">${message}</div>
+            `;
+            messagesContainer.appendChild(userMsg);
+            
+            // Clear input
+            input.value = '';
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Show typing indicator
+            document.getElementById('chatTyping').style.display = 'block';
+            
+            // Simulate bot response
+            setTimeout(() => {
+                document.getElementById('chatTyping').style.display = 'none';
+                
+                const botMsg = document.createElement('div');
+                botMsg.className = 'chat-message bot';
+                botMsg.innerHTML = `
+                    <div class="chat-avatar">🤖</div>
+                    <div class="chat-bubble">
+                        Thank you for your message! A support agent will respond shortly. In the meantime, you can check our <a href="#" style="color: var(--primary);">Help Center</a> for instant answers.
+                    </div>
+                `;
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1500);
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        // Update support button to open live chat
+        document.addEventListener('DOMContentLoaded', function() {
+            const supportContent = document.querySelector('#supportPanel .overlay-content');
+            if (supportContent) {
+                supportContent.querySelector('.btn-primary').onclick = function() {
+                    closePanel('supportPanel');
+                    openLiveChat();
+                };
+            }
         });
 
         // Initialize on load
